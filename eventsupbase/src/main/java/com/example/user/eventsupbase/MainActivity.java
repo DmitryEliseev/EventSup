@@ -19,6 +19,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -83,34 +85,47 @@ public class MainActivity extends AppCompatActivity {
             if (response == null)
                 responseView.setText("THERE WAS AN ERROR");
 
-            if (response.length() <= 3)
+            else if (response.length() <= 3)
                 responseView.setText("THERE IS NO SUCH EVENT");
             else {
                 responseView.setText(response);
 
                 try {
+                    EventModel event = new EventModel();
+
                     JSONArray reader = new JSONArray(response);
                     JSONObject dataJson = reader.getJSONObject(0);
-                    String id_event = dataJson.getString("id_event");
-                    String event_name = dataJson.getString("event_name");
-                    String data_start = dataJson.getString("date_start");
-                    String data_finish = dataJson.getString("date_finish");
-                    String picture = dataJson.getString("picture");
+                    event.id_event = dataJson.getString("id_event");
+                    event.event_name = dataJson.getString("event_name");
+                    event.date_start = dataJson.getString("date_start");
+                    event.date_finish = dataJson.getString("date_finish");
+                    event.picture = dataJson.getString("picture");
+
+                    List<ReportModel> reports = new ArrayList<>();
+
                     JSONArray report_arr = dataJson.getJSONArray("report");
                     for (int i = 0; i<report_arr.length(); i++){
+                        ReportModel report = new ReportModel();
+
                         JSONObject report_ob = report_arr.getJSONObject(i);
-                        String id_report = report_ob.getString("id_report");
-                        String report_name = report_ob.getString("report_name");
-                        String time = report_ob.getString("time");
-                        String address = report_ob.getString("address");
-                        String lecture_hall = report_ob.getString("lecture_hall");
-                        String description = report_ob.getString("description");
-                        JSONArray authors = report_ob.getJSONArray("author");
-                        for (int j = 0; j<authors.length(); j++){
-                            JSONObject author_ob = authors.getJSONObject(j);
-                            String author = author_ob.getString("author_name");
+                        report.id_report = report_ob.getString("id_report");
+                        report.report_name = report_ob.getString("report_name");
+                        report.time = report_ob.getString("time");
+                        report.address = report_ob.getString("address");
+                        report.lecture_hall = report_ob.getString("lecture_hall");
+                        report.description = report_ob.getString("description");
+
+                        List<String>authors = new ArrayList<>();
+                        JSONArray author = report_ob.getJSONArray("author");
+                        for (int j = 0; j<author.length(); j++){
+                            JSONObject author_ob = author.getJSONObject(j);
+                            authors.add(author_ob.getString("author_name"));
                         }
+                        report.authors = authors;
+                        authors.clear();
+                        reports.add(report);
                     }
+                    event.reports = reports;
                 } catch (JSONException e) {
                     Log.e("JSON_ERROR", "Something goes wrong here");
                 }
