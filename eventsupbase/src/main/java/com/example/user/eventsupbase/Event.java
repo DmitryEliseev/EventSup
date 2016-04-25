@@ -2,11 +2,12 @@ package com.example.user.eventsupbase;
 
 import java.util.List;
 
-public class EventModel {
+public class Event {
     String id_event;
     String event_name;
     String date_start;
     String date_finish;
     String picture;
-    List<ReportModel> reports;
+    String event_address;
+    List<Report> reports;
 }
