@@ -7,7 +7,7 @@ public class Event {
     String event_name;
     String date_start;
     String date_finish;
-    String picture;
+    byte[] picture;
     String event_address;
     List<Report> reports;
 }
