@@ -41,13 +41,9 @@ public class HttpClient {
         try {
             URL url = new URL("http://diploma.welcomeru.ru/" + picture_url);
             HttpURLConnection urlConnection = null;
-            InputStream is = null;
             try {
                 urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setDoInput(true);
-                urlConnection.setDoOutput(true);
-                urlConnection.connect();
-                is = urlConnection.getInputStream();
+                InputStream is = urlConnection.getInputStream();
 
                 byte[] buffer = new byte[1024];
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();

@@ -1,6 +1,10 @@
 package com.example.user.eventsupbase;
 
 import android.util.Log;
+
+import com.example.user.eventsupbase.Models.Event;
+import com.example.user.eventsupbase.Models.Report;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

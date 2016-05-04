@@ -1,21 +1,28 @@
 package com.example.user.eventsupbase;
 
+import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.example.user.eventsupbase.Models.Event;
+
+import java.io.Serializable;
 import java.util.List;
 
-import static android.content.pm.ActivityInfo.*;
+import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 
 public class MainActivity extends AppCompatActivity {
 
     List<Event> events;
-    TextView responseView;
-    ProgressBar progressBar;
+    Intent intent;
+    String TAG = "MY_LOG";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,25 +30,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setRequestedOrientation(SCREEN_ORIENTATION_PORTRAIT);
 
+        intent = new Intent(this, EventActivity.class);
+    }
 
-        responseView = (TextView) findViewById(R.id.responseView);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+    public void OnBeginButtonClick(View v) {
+        new GetJsonInfo().execute();
 
-        Button btnQuery = (Button) findViewById(R.id.queryButton);
-        btnQuery.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                new GetJsonInfo().execute();
-            }
-        });
     }
 
     class GetJsonInfo extends AsyncTask<Void, Void, String> {
 
         protected void OnPreExecute() {
-            progressBar.setVisibility(View.VISIBLE);
-            responseView.setText("");
+
         }
 
         @Override
@@ -51,19 +51,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(String response) {
-            progressBar.setVisibility(View.GONE);
-
             if (response == null)
-                responseView.setText("THERE WAS AN ERROR");
+                Log.e(TAG, "THERE WAS AN ERROR");
 
             else if (response.length() <= 3)
-                responseView.setText("THERE IS NO SUCH EVENT");
+                Log.e(TAG, "THERE IS NO SUCH EVENT");
             else {
-                responseView.setText(response);
                 JsonParsing parsing = new JsonParsing();
                 events = parsing.GetEventFromJsonString(response);
+                intent.putExtra("Events", (Serializable) events);
+                // TODO: настроить флаги intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+                startActivity(intent);
             }
-
         }
     }
 }
