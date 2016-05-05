@@ -9,6 +9,7 @@ import com.example.user.eventsupbase.Models.Report;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,8 @@ import java.util.List;
  * This class is responsible for parsing input json string
  */
 public class JsonParsing {
+
+    String TAG = "MY_LOG";
 
     public List<Event> GetEventFromJsonString(DataStorage response)
     {
@@ -63,7 +66,7 @@ public class JsonParsing {
             }
             return events;
         } catch (JSONException e) {
-            Log.e("MY_LOG", "JSON PARSING ERROR");
+            Log.e(TAG, "JSON PARSING ERROR");
             return null;
         }
     }

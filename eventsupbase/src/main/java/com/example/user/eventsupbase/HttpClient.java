@@ -5,14 +5,12 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.example.user.eventsupbase.Models.DataStorage;
-import com.example.user.eventsupbase.Models.Event;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
