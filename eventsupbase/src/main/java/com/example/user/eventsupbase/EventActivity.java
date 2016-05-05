@@ -39,7 +39,6 @@ public class EventActivity extends AppCompatActivity {
         ShowAllEvents((List<Event>)intent.getSerializableExtra("Events"));
     }
 
-    //тестовый метод
     public void ShowAllEvents (List<Event> events){
         LayoutInflater layoutInflater = getLayoutInflater();
 
@@ -53,10 +52,11 @@ public class EventActivity extends AppCompatActivity {
             event_date.setText((events.get(i).date_start + " — " + events.get(i).date_finish));
             event_address.setText((events.get(i).event_address));
 
-            if(events.get(i).picture!=null && events.get(i).picture.length>0){
-                Bitmap pic = BitmapFactory.decodeByteArray(events.get(i).picture, 0, events.get(i).picture.length);
-                event_picture.setImageBitmap(pic);
-            }
+//            if(events.get(i).picture!=null && events.get(i).picture.length>0){
+//                Bitmap bmp = BitmapFactory.decodeByteArray(events.get(i).picture, 0, events.get(i).picture.length);
+//                event_picture.setImageBitmap(bmp);
+//            }
+
             gridLayout.setBackgroundColor(colors[i%2]);
             linearLayout.addView(gridLayout);
         }

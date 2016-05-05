@@ -1,12 +1,23 @@
 package com.example.user.eventsupbase;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
+
+import com.example.user.eventsupbase.Models.DataStorage;
+import com.example.user.eventsupbase.Models.Event;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by User on 26.04.2016.
@@ -14,7 +25,8 @@ import java.net.URL;
  */
 public class HttpClient {
 
-    public String getAllEventsData() {
+    public DataStorage getAllEventsData() {
+        DataStorage ds = new DataStorage();
         try {
             URL url = new URL("http://diploma.welcomeru.ru/events");
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -26,7 +38,20 @@ public class HttpClient {
                     stringBuilder.append(line);
                 }
                 bufferedReader.close();
-                return stringBuilder.toString();
+
+                String response = stringBuilder.toString();
+                ds.JsonResponse = response;
+
+                List<byte[]> pictures = new ArrayList<>();
+
+                JSONArray reader = new JSONArray(response);
+                for (int k = 0; k < reader.length(); k++) {
+                    JSONObject dataJson = reader.getJSONObject(k);
+                    pictures.add(getEventPicture(dataJson.getString("picture")));
+                }
+
+                ds.pictures = pictures;
+                return ds;
             } finally {
                 urlConnection.disconnect();
             }
@@ -36,30 +61,25 @@ public class HttpClient {
         }
     }
 
-    // This doesn't work properly
     public byte[] getEventPicture(String picture_url) {
         try {
             URL url = new URL("http://diploma.welcomeru.ru/" + picture_url);
-            HttpURLConnection urlConnection = null;
             try {
-                urlConnection = (HttpURLConnection) url.openConnection();
-                InputStream is = urlConnection.getInputStream();
-
-                byte[] buffer = new byte[1024];
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-                while ( is.read(buffer) != -1)
-                    baos.write(buffer);
-
-                return baos.toByteArray();
-            } finally {
-                urlConnection.disconnect();
+                Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bmp.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                return stream.toByteArray();
+            }
+            catch (Exception e){
+                Log.e("ERROR_JSON_PICTURE", e.getMessage(), e);
+                return null;
             }
         } catch (Exception e) {
             Log.e("ERROR_JSON_PICTURE", e.getMessage(), e);
             return null;
         }
     }
+
 
 }
 

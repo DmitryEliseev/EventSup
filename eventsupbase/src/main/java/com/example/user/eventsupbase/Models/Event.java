@@ -1,5 +1,7 @@
 package com.example.user.eventsupbase.Models;
 
+import android.graphics.Bitmap;
+
 import java.io.Serializable;
 import java.util.List;
 

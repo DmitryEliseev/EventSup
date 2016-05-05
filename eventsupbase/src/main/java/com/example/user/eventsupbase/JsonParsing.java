@@ -2,6 +2,7 @@ package com.example.user.eventsupbase;
 
 import android.util.Log;
 
+import com.example.user.eventsupbase.Models.DataStorage;
 import com.example.user.eventsupbase.Models.Event;
 import com.example.user.eventsupbase.Models.Report;
 
@@ -17,11 +18,10 @@ import java.util.List;
  */
 public class JsonParsing {
 
-    public List<Event> GetEventFromJsonString(String response)
+    public List<Event> GetEventFromJsonString(DataStorage response)
     {
-        HttpClient httpClient = new HttpClient();
         try {
-            JSONArray reader = new JSONArray(response);
+            JSONArray reader = new JSONArray(response.JsonResponse);
             List<Event> events = new ArrayList<>();
 
             for(int k = 0; k<reader.length(); k++) {
@@ -31,7 +31,7 @@ public class JsonParsing {
                 event.event_name = dataJson.getString("event_name");
                 event.date_start = dataJson.getString("date_start");
                 event.date_finish = dataJson.getString("date_finish");
-                event.picture = httpClient.getEventPicture(dataJson.getString("picture"));
+                event.picture = response.pictures.get(k);
                 event.event_address = dataJson.getString("event_address");
 
                 List<Report> reports = new ArrayList<>();
