@@ -10,14 +10,14 @@
         android:layout_margin="5dp">
 
         <ImageView
-            android:id="@+id/report_picture"
+            android:id="@+id/c_report_picture"
             android:layout_width="fill_parent"
             android:layout_height="200px"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true" />
 
         <TextView
-            android:id="@+id/report_title"
+            android:id="@+id/c_report_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -25,21 +25,21 @@
             android:text="New Text" />
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/c_report_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/report_title"
+            android:layout_below="@+id/c_report_title"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="150px"
             android:text="New Text" />
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/c_report_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/report_title"
+            android:layout_below="@+id/c_report_title"
             android:layout_centerHorizontal="true"
             android:layout_marginRight="150px"
             android:text="New Text" />
@@ -53,17 +53,18 @@
         android:layout_marginBottom="40dp">
 
         <TextView
-            android:id="@+id/textView7"
+            android:id="@+id/c_report_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="New Text"
             android:layout_marginTop="10px"/>
     </ScrollView>
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/c_report_pdfdoc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Text"
         android:layout_marginTop="-30dp"
-        android:layout_marginLeft="5dp" />
+        android:layout_marginLeft="5dp"
+        android:singleLine="true" />
 </LinearLayout>

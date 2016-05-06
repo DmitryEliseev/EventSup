@@ -21,7 +21,8 @@
             android:name=".EventActivity"
             android:label="@string/title_activity_event2"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ReportActivity"></activity>
+        <activity android:name=".ReportActivity" />
+        <activity android:name=".ConcreteReportActivity"></activity>
     </application>
 
 </manifest>

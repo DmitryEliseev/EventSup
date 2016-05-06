@@ -22,7 +22,7 @@ import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 public class EventActivity extends AppCompatActivity {
 
     LinearLayout linearLayout;
-    Intent intent;
+    Intent intent, intent2;
     int[] colors = new int[2];
     String TAG = "MY_LOG";
     List<Event> events;
@@ -32,6 +32,8 @@ public class EventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
         setRequestedOrientation(SCREEN_ORIENTATION_PORTRAIT);
+
+        intent2 = new Intent(this, ReportActivity.class);
 
         colors[0] = Color.parseColor("#dbdbdb");
         colors[1] = Color.parseColor("#eeeeee");
@@ -43,7 +45,7 @@ public class EventActivity extends AppCompatActivity {
         ShowAllEvents(events);
     }
 
-    private void ShowAllEvents (List<Event> events){
+    public void ShowAllEvents (List<Event> events){
         LayoutInflater layoutInflater = getLayoutInflater();
 
         for (int i = 0; i<events.size(); i++){
@@ -64,7 +66,6 @@ public class EventActivity extends AppCompatActivity {
     public void onGridClick (View v)
     {
         int id = v.getId();
-        Intent intent2 = new Intent(this, ReportActivity.class);
         intent2.putExtra("Reports", (Serializable) events.get(id).reports);
         startActivity(intent2);
     }

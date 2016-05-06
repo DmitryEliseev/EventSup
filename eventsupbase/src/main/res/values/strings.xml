@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">EventSupBase</string>
     <string name="title_activity_event2">EventActivity2</string>
+    <string name="title_activity_main_report">MainReportActivity</string>
 </resources>

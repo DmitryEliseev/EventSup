@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -21,8 +22,7 @@ public class JsonParsing {
 
     String TAG = "MY_LOG";
 
-    public List<Event> GetEventFromJsonString(DataStorage response)
-    {
+    public List<Event> GetEventFromJsonString(DataStorage response){
         try {
             JSONArray reader = new JSONArray(response.JsonResponse);
             List<Event> events = new ArrayList<>();
@@ -50,15 +50,15 @@ public class JsonParsing {
                     report.report_address = report_ob.getString("report_address");
                     report.lecture_hall = report_ob.getString("lecture_hall");
                     report.description = report_ob.getString("description");
+                    report.document = report_ob.getString("doc");
 
-                    List<String> authors = new ArrayList<>();
+                    report.authors = new ArrayList<>();
                     JSONArray author = report_ob.getJSONArray("author");
                     for (int j = 0; j < author.length(); j++) {
                         JSONObject author_ob = author.getJSONObject(j);
-                        authors.add(author_ob.getString("author_name"));
+                        report.authors.add(author_ob.getString("author_name"));
                     }
-                    report.authors = authors;
-                    authors.clear();
+
                     reports.add(report);
                 }
                 event.reports = reports;

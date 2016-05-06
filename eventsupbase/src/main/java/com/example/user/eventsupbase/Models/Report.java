@@ -10,5 +10,6 @@ public class Report implements Serializable {
     public String report_address;
     public String lecture_hall;
     public String description;
+    public String document;
     public List<String> authors;
 }
