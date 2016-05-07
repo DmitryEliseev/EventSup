@@ -4,67 +4,87 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <GridLayout
         android:layout_width="match_parent"
-        android:layout_height="200px"
-        android:layout_margin="5dp">
-
-        <ImageView
-            android:id="@+id/c_report_picture"
-            android:layout_width="fill_parent"
-            android:layout_height="200px"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true" />
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:rowCount="2"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
 
         <TextView
             android:id="@+id/c_report_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="30dp"
-            android:text="New Text" />
-
-        <TextView
-            android:id="@+id/c_report_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/c_report_title"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="150px"
-            android:text="New Text" />
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="New Text"
+            android:textSize="20dp"
+            android:gravity="center_horizontal"
+            android:layout_row="0"
+            android:layout_column="0"
+            android:layout_columnSpan="2"
+            android:layout_gravity="fill_horizontal" />
 
         <TextView
             android:id="@+id/c_report_address"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/c_report_title"
-            android:layout_centerHorizontal="true"
-            android:layout_marginRight="150px"
-            android:text="New Text" />
-    </RelativeLayout>
+            android:layout_marginRight="0dp"
+            android:text="New Text"
+            android:gravity="center_horizontal"
+            android:layout_row="1"
+            android:layout_column="0"
+            android:layout_gravity="fill_horizontal"
+            android:layout_columnWeight="1"
+            android:textSize="15dp"
+            android:textStyle="italic" />
+
+        <TextView
+            android:id="@+id/c_report_date"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:text="New Text"
+            android:shrinkColumns="0, true"
+            android:gravity="center_horizontal"
+            android:layout_row="1"
+            android:layout_column="1"
+            android:layout_gravity="fill_horizontal"
+            android:layout_columnWeight="1"
+            android:textSize="15dp"
+            android:textStyle="italic" />
+    </GridLayout>
+
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="40dp">
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="50dp"
+        android:layout_marginTop="10dp">
 
         <TextView
             android:id="@+id/c_report_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="New Text"
-            android:layout_marginTop="10px"/>
+            android:layout_marginTop="10px"
+            android:textSize="14dp"/>
     </ScrollView>
     <TextView
         android:id="@+id/c_report_pdfdoc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Text"
-        android:layout_marginTop="-30dp"
-        android:layout_marginLeft="5dp"
-        android:singleLine="true" />
+        android:layout_marginLeft="10dp"
+        android:singleLine="true"
+        android:drawableLeft="@drawable/pdf_logo"
+        android:gravity="center_vertical"
+        android:textSize="15dp"
+        android:drawablePadding="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="-40dp" />
+
 </LinearLayout>

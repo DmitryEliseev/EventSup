@@ -45,7 +45,8 @@ public class HttpClient {
                 JSONArray reader = new JSONArray(response);
                 for (int k = 0; k < reader.length(); k++) {
                     JSONObject dataJson = reader.getJSONObject(k);
-                    pictures.add(getEventPicture(dataJson.getString("picture")));
+                    //TODO: доработать подгрузку картинки или удалить ее
+//                    pictures.add(getEventPicture(dataJson.getString("picture")));
                 }
 
                 ds.pictures = pictures;

@@ -14,7 +14,8 @@
         android:layout_marginTop="10dp"
         android:textSize="16dp"
         android:textStyle="bold"
-        android:gravity="center_horizontal" />
+        android:gravity="center_horizontal"
+        android:textColor="#001845" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -22,34 +23,38 @@
         android:text="New Text"
         android:id="@+id/report_date"
         android:layout_marginTop="25dp"
-        android:layout_marginLeft="25dp"
+        android:layout_marginLeft="10dp"
         android:textSize="15dp"
-        android:textStyle="normal" />
+        android:textStyle="normal"
+        android:textColor="#001845" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Text"
         android:id="@+id/report_address"
-        android:layout_marginLeft="25dp"
+        android:layout_marginLeft="10dp"
         android:textSize="15dp"
-        android:textStyle="normal" />
+        android:textStyle="normal"
+        android:textColor="#001845" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Text"
         android:id="@+id/report_description"
-        android:layout_marginLeft="25dp"
-        android:textSize="13dp" />
+        android:layout_marginLeft="10dp"
+        android:textSize="13dp"
+        android:textColor="#001845" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Text"
         android:id="@+id/report_authors"
-        android:layout_marginLeft="25dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginBottom="10dp"
-        android:textSize="15dp" />
+        android:textSize="15dp"
+        android:textColor="#001845" />
 
 </LinearLayout>
