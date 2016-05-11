@@ -2,7 +2,6 @@ package com.example.user.eventsupbase;
 
 import android.util.Log;
 
-import com.example.user.eventsupbase.Models.DataStorage;
 import com.example.user.eventsupbase.Models.Event;
 import com.example.user.eventsupbase.Models.Report;
 
@@ -11,7 +10,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -22,9 +20,9 @@ public class JsonParsing {
 
     String TAG = "MY_LOG";
 
-    public List<Event> GetEventFromJsonString(DataStorage response){
+    public List<Event> GetEventFromJsonString(String response){
         try {
-            JSONArray reader = new JSONArray(response.JsonResponse);
+            JSONArray reader = new JSONArray(response);
             List<Event> events = new ArrayList<>();
 
             for(int k = 0; k<reader.length(); k++) {
@@ -34,8 +32,6 @@ public class JsonParsing {
                 event.event_name = dataJson.getString("event_name");
                 event.date_start = dataJson.getString("date_start");
                 event.date_finish = dataJson.getString("date_finish");
-                //TODO: доработать загрузку картинки или удалить ее
-//                event.picture = response.pictures.get(k);
                 event.event_address = dataJson.getString("event_address");
 
                 List<Report> reports = new ArrayList<>();

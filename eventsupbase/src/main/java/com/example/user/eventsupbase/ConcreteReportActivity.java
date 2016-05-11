@@ -1,11 +1,10 @@
 package com.example.user.eventsupbase;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.user.eventsupbase.Models.Report;

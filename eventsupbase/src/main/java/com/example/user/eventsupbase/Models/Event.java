@@ -10,7 +10,6 @@ public class Event implements Serializable{
     public String event_name;
     public String date_start;
     public String date_finish;
-    public byte[] picture;
     public String event_address;
     public List<Report> reports;
 }

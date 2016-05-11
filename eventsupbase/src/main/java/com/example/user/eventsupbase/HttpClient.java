@@ -1,21 +1,11 @@
 package com.example.user.eventsupbase;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 
-import com.example.user.eventsupbase.Models.DataStorage;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by User on 26.04.2016.
@@ -23,10 +13,15 @@ import java.util.List;
  */
 public class HttpClient {
 
-    public DataStorage getAllEventsData() {
-        DataStorage ds = new DataStorage();
+    private String url_address;
+
+    public HttpClient(String url_address){
+        this.url_address = url_address;
+    }
+
+    public String getAllEventsData() {
         try {
-            URL url = new URL("http://diploma.welcomeru.ru/events");
+            URL url = new URL(url_address);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             try {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
@@ -37,20 +32,7 @@ public class HttpClient {
                 }
                 bufferedReader.close();
 
-                String response = stringBuilder.toString();
-                ds.JsonResponse = response;
-
-                List<byte[]> pictures = new ArrayList<>();
-
-                JSONArray reader = new JSONArray(response);
-                for (int k = 0; k < reader.length(); k++) {
-                    JSONObject dataJson = reader.getJSONObject(k);
-                    //TODO: доработать подгрузку картинки или удалить ее
-//                    pictures.add(getEventPicture(dataJson.getString("picture")));
-                }
-
-                ds.pictures = pictures;
-                return ds;
+                return stringBuilder.toString();
             } finally {
                 urlConnection.disconnect();
             }
@@ -59,26 +41,5 @@ public class HttpClient {
             return null;
         }
     }
-
-    public byte[] getEventPicture(String picture_url) {
-        try {
-            URL url = new URL("http://diploma.welcomeru.ru/" + picture_url);
-            try {
-                Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bmp.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                return stream.toByteArray();
-            }
-            catch (Exception e){
-                Log.e("ERROR_JSON_PICTURE", e.getMessage(), e);
-                return null;
-            }
-        } catch (Exception e) {
-            Log.e("ERROR_JSON_PICTURE", e.getMessage(), e);
-            return null;
-        }
-    }
-
-
 }
 
