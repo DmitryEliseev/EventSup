@@ -1,4 +1,4 @@
-package com.example.user.eventsupbase.QR;
+package com.example.user.eventsupbase.QrReaderIntegrator;
 
 /**
  * Created by User on 11.05.2016.

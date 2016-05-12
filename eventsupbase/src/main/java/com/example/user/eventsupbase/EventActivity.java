@@ -1,14 +1,18 @@
 package com.example.user.eventsupbase;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.user.eventsupbase.Models.Event;
 
@@ -33,6 +37,9 @@ public class EventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
         setRequestedOrientation(SCREEN_ORIENTATION_PORTRAIT);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         intent2 = new Intent(this, ReportActivity.class);
 
@@ -88,9 +95,29 @@ public class EventActivity extends AppCompatActivity {
         intent2.putExtra("EventAddress", events.get(id).event_address);
         startActivity(intent2);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+//                Intent intent = new Intent(this, HomeActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent);
+                finish();
+                return true;
+            case R.id.action_visited:
+                Toast.makeText(getApplicationContext(), "Super!", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
 }
 
-//            if(events.get(i).picture!=null && events.get(i).picture.length>0){
-//                Bitmap bmp = BitmapFactory.decodeByteArray(events.get(i).picture, 0, events.get(i).picture.length);
-//                event_picture.setImageBitmap(bmp);
-//            }

@@ -3,9 +3,11 @@ package com.example.user.eventsupbase;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.UnknownHostException;
 
 /**
  * Created by User on 26.04.2016.
@@ -32,13 +34,21 @@ public class HttpClient {
                 }
                 bufferedReader.close();
 
-                return stringBuilder.toString();
+                String response = stringBuilder.toString();
+                if(response.length()<5)
+                    return "-2";
+                else
+                    return stringBuilder.toString();
             } finally {
                 urlConnection.disconnect();
             }
-        } catch (Exception e) {
-            Log.e("ERROR_JSON_STRING", e.getMessage(), e);
-            return null;
+        }
+        catch (FileNotFoundException e) {
+            return "-2";
+        } catch (UnknownHostException e){
+            return  "-1";
+        } catch (Exception e){
+            return "0";
         }
     }
 }

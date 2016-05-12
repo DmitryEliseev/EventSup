@@ -20,13 +20,29 @@
         android:textStyle="normal" />
 
     <Button
-        android:id="@+id/BeginButton"
+        android:id="@+id/btnScanQrCode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        style="@style/Base.Widget.AppCompat.Button.Borderless"
-        android:text="НАЧАТЬ"
+        style="@style/Base.Widget.AppCompat.Button.Colored"
+        android:text="Сканировать QR код"
         android:onClick="OnBeginButtonClick"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="20dp"
+        android:background="#4052b5"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Все события"
+        android:id="@+id/btnAllEvents"
+        android:layout_gravity="center_horizontal"
+        style="@style/Base.Widget.AppCompat.Button.Colored"
+        android:background="#9daaf7"
+        android:onClick="OnBeginButtonClick"
+        android:layout_marginTop="20dp"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp" />
 
 </LinearLayout>

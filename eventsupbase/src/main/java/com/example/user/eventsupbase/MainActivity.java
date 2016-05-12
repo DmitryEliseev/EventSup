@@ -9,8 +9,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.user.eventsupbase.Models.Event;
-import com.example.user.eventsupbase.QR.IntentIntegrator;
-import com.example.user.eventsupbase.QR.IntentResult;
+import com.example.user.eventsupbase.QrReaderIntegrator.IntentIntegrator;
+import com.example.user.eventsupbase.QrReaderIntegrator.IntentResult;
 
 import java.io.Serializable;
 import java.util.List;
@@ -22,7 +22,8 @@ public class MainActivity extends AppCompatActivity {
     List<Event> events;
     Intent intent;
     ProgressDialog pDialog;
-    String url_address;
+    String url_address_one_event;
+    String url_address_all_events = "http://diploma.welcomeru.ru/events";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +35,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void OnBeginButtonClick(View v) {
-        IntentIntegrator integrator = new IntentIntegrator(this);
-        integrator.initiateScan();
+        switch (v.getId()){
+            case R.id.btnScanQrCode:
+                IntentIntegrator integrator = new IntentIntegrator(this);
+                integrator.initiateScan();
+                break;
+            case R.id.btnAllEvents:
+                new GetJsonInfo().execute(url_address_all_events);
+                break;
+        }
     }
 
     class GetJsonInfo extends AsyncTask<String, Void, String> {
@@ -54,26 +62,34 @@ public class MainActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(String response) {
-            if (response == null) {
-                pDialog.dismiss();
-                Toast.makeText(getApplicationContext(), "Error or no Internet connection!", Toast.LENGTH_LONG).show();
-            } else {
-                pDialog.dismiss();
-                JsonParsing parsing = new JsonParsing();
-                events = parsing.GetEventFromJsonString(response);
-                intent.putExtra("Events", (Serializable) events);
-                // TODO: настроить флаги intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-                startActivity(intent);
+            pDialog.dismiss();
+            switch (response) {
+                case "-2":
+                    Toast.makeText(getApplicationContext(), "Such event was not found!", Toast.LENGTH_LONG).show();
+                    break;
+                case "-1":
+                    Toast.makeText(getApplicationContext(), "No Internet connection!", Toast.LENGTH_LONG).show();
+                    break;
+                case "0":
+                    Toast.makeText(getApplicationContext(), "There was an unexpected mistake!", Toast.LENGTH_LONG).show();
+                    break;
+                default:
+                    JsonParsing parsing = new JsonParsing();
+                    events = parsing.GetEventFromJsonString(response);
+                    intent.putExtra("Events", (Serializable) events);
+                    // TODO: настроить флаги intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+                    startActivity(intent);
+                    break;
             }
         }
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-        if ((scanResult != null)&&(scanResult.getContents()!=null)){
-            url_address = "http://diploma.welcomeru.ru/" + scanResult.getContents();
-            new GetJsonInfo().execute(url_address);
-        }
-        else Toast.makeText(this, "Чтение QR кода не было произведено!", Toast.LENGTH_LONG).show();
+        if (scanResult.getContents() != null) {
+            url_address_one_event = "http://diploma.welcomeru.ru/" + scanResult.getContents();
+            new GetJsonInfo().execute(url_address_one_event);
+        } else
+            Toast.makeText(this, "Чтение QR кода не было произведено!", Toast.LENGTH_LONG).show();
     }
 }

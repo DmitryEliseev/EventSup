@@ -6,7 +6,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -17,9 +17,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".EventActivity"/>
-        <activity android:name=".ConcreteReportActivity" />
-        <activity android:name=".ReportActivity" />
+        <activity android:name=".EventActivity"
+            android:label="Конференция">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        </activity>
+        <activity android:name=".ConcreteReportActivity"
+            android:label="Доклад">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".ReportActivity"/>
+        </activity>
+        <activity android:name=".ReportActivity"
+            android:label="Доклады">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".EventActivity"/>
+        </activity>
     </application>
 
 </manifest>

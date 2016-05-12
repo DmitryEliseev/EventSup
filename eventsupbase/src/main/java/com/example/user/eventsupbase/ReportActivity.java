@@ -5,9 +5,12 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.user.eventsupbase.Models.Report;
 
@@ -31,6 +34,9 @@ public class ReportActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
         intent2 = new Intent(this, ConcreteReportActivity.class);
 
         colors[0] = Color.parseColor("#c9dcff");
@@ -51,9 +57,10 @@ public class ReportActivity extends AppCompatActivity {
     }
     private void ShowAllReports(List<Report> reports) {
         LayoutInflater layoutInflater = getLayoutInflater();
-        String address = "", authors = "";
+        String address = "";
 
         for (int i = 0; i < reports.size(); i++) {
+            String authors = "";
             LinearLayout linearLayout = (LinearLayout) layoutInflater.inflate(R.layout.report_item, baseLinearLayout, false);
             linearLayout.setBackgroundColor(colors[1]);
             linearLayout.setId(i);
@@ -108,5 +115,28 @@ public class ReportActivity extends AppCompatActivity {
         intent2.putExtra("ReportID", id);
         intent2.putExtra("EventAddress", event_address);
         startActivity(intent2);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+//                Intent intent = new Intent(this, HomeActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent);
+                finish();
+                return true;
+            case R.id.action_visited:
+                Toast.makeText(getApplicationContext(), "Super!", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
     }
 }

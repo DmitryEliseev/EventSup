@@ -48,15 +48,13 @@ public class JsonParsing {
                     report.lecture_hall = report_ob.getString("lecture_hall");
                     report.description = report_ob.getString("description");
                     report.document = report_ob.getString("doc");
-
-                    //TODO: исправить сохранение авторов в докладе
                     report.authors = new ArrayList<>();
+
                     JSONArray author = report_ob.getJSONArray("author");
                     for (int j = 0; j < author.length(); j++) {
                         JSONObject author_ob = author.getJSONObject(j);
                         report.authors.add(author_ob.getString("author_name"));
                     }
-
                     reports.add(report);
                 }
                 event.reports = reports;
