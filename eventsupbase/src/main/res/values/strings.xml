@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name">EventSupBase</string>
-    <string name="title_activity_event2">EventActivity2</string>
-    <string name="title_activity_main_report">MainReportActivity</string>
+    <string name="app_name">EventSup</string>
     <string name="favourite_item">Посещенные мероприятия</string>
 </resources>

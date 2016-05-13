@@ -51,5 +51,34 @@ public class HttpClient {
             return "0";
         }
     }
+
+    //TODO: реализовать запрос на посещенный мероприятия
+    public String getAllVisitedReports(){
+        return null;
+    }
+
+    public String RegisterOrLogin(){
+        try {
+            URL url = new URL(url_address);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            try {
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                StringBuilder stringBuilder = new StringBuilder();
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(line);
+                }
+                bufferedReader.close();
+                return stringBuilder.toString();
+            } finally {
+                urlConnection.disconnect();
+            }
+        }
+        catch (UnknownHostException e){
+            return  "-2";
+        } catch (Exception e){
+            return "0";
+        }
+    }
 }
 

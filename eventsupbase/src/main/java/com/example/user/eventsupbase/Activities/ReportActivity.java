@@ -1,4 +1,4 @@
-package com.example.user.eventsupbase;
+package com.example.user.eventsupbase.Activities;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.user.eventsupbase.Models.Report;
+import com.example.user.eventsupbase.R;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;

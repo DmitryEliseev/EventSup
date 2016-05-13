@@ -66,4 +66,9 @@ public class JsonParsing {
             return null;
         }
     }
+
+    //TODO: метод возвращающий список мероприятий
+    public List<Report> GetReportsFromJsonString(String response){
+        return null;
+    }
 }

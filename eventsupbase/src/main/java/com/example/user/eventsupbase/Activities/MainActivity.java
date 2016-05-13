@@ -1,4 +1,4 @@
-package com.example.user.eventsupbase;
+package com.example.user.eventsupbase.Activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -6,11 +6,17 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.user.eventsupbase.HttpClient;
+import com.example.user.eventsupbase.JsonParsing;
 import com.example.user.eventsupbase.Models.Event;
 import com.example.user.eventsupbase.QrReaderIntegrator.IntentIntegrator;
 import com.example.user.eventsupbase.QrReaderIntegrator.IntentResult;
+import com.example.user.eventsupbase.R;
+
+import org.w3c.dom.Text;
 
 import java.io.Serializable;
 import java.util.List;
@@ -20,10 +26,10 @@ import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 public class MainActivity extends AppCompatActivity {
 
     List<Event> events;
-    Intent intent;
+    Intent intent, intent2;
     ProgressDialog pDialog;
     String url_address_one_event;
-    String url_address_all_events = "http://diploma.welcomeru.ru/events";
+    final String url_address_all_events = "http://diploma.welcomeru.ru/events";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +37,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setRequestedOrientation(SCREEN_ORIENTATION_PORTRAIT);
 
-        intent = new Intent(this, EventActivity.class);
+        intent2 = new Intent(this, EventActivity.class);
+
+        intent = getIntent();
+        TextView twStatus = (TextView)findViewById(R.id.twStatus);
+        twStatus.setText(intent.getStringExtra("Status"));
     }
 
-    public void OnBeginButtonClick(View v) {
+    public void OnClick(View v) {
         switch (v.getId()){
             case R.id.btnScanQrCode:
                 IntentIntegrator integrator = new IntentIntegrator(this);
@@ -76,9 +86,9 @@ public class MainActivity extends AppCompatActivity {
                 default:
                     JsonParsing parsing = new JsonParsing();
                     events = parsing.GetEventFromJsonString(response);
-                    intent.putExtra("Events", (Serializable) events);
+                    intent2.putExtra("Events", (Serializable) events);
                     // TODO: настроить флаги intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-                    startActivity(intent);
+                    startActivity(intent2);
                     break;
             }
         }
