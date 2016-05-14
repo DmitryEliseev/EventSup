@@ -62,7 +62,7 @@ public class JsonParsing {
             }
             return events;
         } catch (Exception e) {
-            Log.e(TAG, "JSON PARSING ERROR");
+            Log.e(TAG, e.getMessage());
             return null;
         }
     }
@@ -88,7 +88,7 @@ public class JsonParsing {
             }
             return reports;
         }catch (Exception e){
-            Log.e(TAG, "JSON PARSING ERROR");
+            Log.e(TAG, e.getMessage());
             return null;
         }
     }

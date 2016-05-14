@@ -23,6 +23,8 @@ public class HttpClient {
         try {
             URL url = new URL(url_address);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setConnectTimeout(1500);
+            urlConnection.setReadTimeout(1500);
             try {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                 StringBuilder stringBuilder = new StringBuilder();
@@ -53,6 +55,8 @@ public class HttpClient {
         try {
             URL url = new URL(url_address);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setConnectTimeout(1500);
+            urlConnection.setReadTimeout(1500);
             try {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                 StringBuilder stringBuilder = new StringBuilder();
@@ -79,6 +83,8 @@ public class HttpClient {
         try {
             URL url = new URL(url_address);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setConnectTimeout(1500);
+            urlConnection.setReadTimeout(1500);
             try {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                 StringBuilder stringBuilder = new StringBuilder();

@@ -8,6 +8,8 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 import com.example.user.eventsupbase.HttpClient;
 import com.example.user.eventsupbase.JsonParsing;
 import com.example.user.eventsupbase.Models.Event;
+import com.example.user.eventsupbase.Models.User;
 import com.example.user.eventsupbase.QrReaderIntegrator.IntentIntegrator;
 import com.example.user.eventsupbase.QrReaderIntegrator.IntentResult;
 import com.example.user.eventsupbase.R;
@@ -27,7 +30,7 @@ import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 public class MainActivity extends AppCompatActivity {
 
     List<Event> events;
-    Intent intent, intent2;
+    Intent intent1, intent2;
     ProgressDialog pDialog;
     String url_address_one_event;
     final String url_address_all_events = "http://diploma.welcomeru.ru/events";
@@ -42,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
 
         intent2 = new Intent(this, EventActivity.class);
 
-        intent = getIntent();
-        String notion = intent.getStringExtra("Status");
+        intent1 = getIntent();
+        String notion = intent1.getStringExtra("Status");
 
         coordinatorLayout = (CoordinatorLayout)findViewById(R.id.main_coordLayout);
 
@@ -85,13 +88,13 @@ public class MainActivity extends AppCompatActivity {
             pDialog.dismiss();
             switch (response) {
                 case "-3":
-                    Toast.makeText(getApplicationContext(), "Такого события нет", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Такого события нет", Toast.LENGTH_SHORT).show();
                     break;
                 case "-2":
-                    Toast.makeText(getApplicationContext(), "Нет соединения с интернетом", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Нет соединения с интернетом", Toast.LENGTH_SHORT).show();
                     break;
                 case "0":
-                    Toast.makeText(getApplicationContext(), "Ошибка:( Попробуйте снова!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Ошибка:( Попробуйте снова!", Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     JsonParsing parsing = new JsonParsing();
@@ -110,6 +113,31 @@ public class MainActivity extends AppCompatActivity {
             url_address_one_event = "http://diploma.welcomeru.ru/" + scanResult.getContents();
             new GetJsonInfo().execute(url_address_one_event);
         } else
-            Toast.makeText(this, "Чтение QR кода не было произведено!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Чтение QR кода не было произведено!", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_exit:
+                User.login = null;
+                Intent intent3 = new Intent(this, StartActivity.class);
+                intent3.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent3);
+                return true;
+            case R.id.action_visited:
+                Intent intent = new Intent(this, VisitedReportsActivity.class);
+//              intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
     }
 }

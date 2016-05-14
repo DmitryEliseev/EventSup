@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,8 +36,8 @@ public class ReportActivity extends AppCompatActivity {
     String event_address;
     List<Report> reports;
     int description_max_length = 125;
-    int id_event;
     CoordinatorLayout coordinatorLayout;
+    String TAG = "MY_LOG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,11 +112,12 @@ public class ReportActivity extends AppCompatActivity {
                     report_address.setTextColor(Color.parseColor("#8592a9"));
                     report_authors.setTextColor(Color.parseColor("#8592a9"));
                     report_description.setTextColor(Color.parseColor("#8592a9"));
+                    registerForContextMenu(linearLayout);
                 }
             } catch (Exception e) {
-                //TODO: реализовать обработку исключения
+                Log.e(TAG, e.getMessage());
             }
-            registerForContextMenu(linearLayout);
+
             baseLinearLayout.addView(linearLayout);
         }
     }
@@ -189,6 +191,8 @@ public class ReportActivity extends AppCompatActivity {
                 case "-1":
                     Snackbar.make(coordinatorLayout, "Этот доклад уже отмечен вами как посещенный!", Snackbar.LENGTH_LONG).show();
                     break;
+                case "":
+                    Snackbar.make(coordinatorLayout, "Такого юзера в системе нет", Snackbar.LENGTH_SHORT).show();
                 case "0":
                     Snackbar.make(coordinatorLayout, "Ошибка:( Попробуйте снова!", Snackbar.LENGTH_LONG).show();
                     break;

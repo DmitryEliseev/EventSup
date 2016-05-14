@@ -19,7 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.MainActivity"/>
+        <activity android:name=".Activities.MainActivity" />
         <activity
             android:name=".Activities.EventActivity"
             android:label="Конференция">
@@ -41,7 +41,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activities.EventActivity" />
         </activity>
-        <activity android:name=".Activities.VisitedReportsActivity" />
+        <activity
+            android:name=".Activities.VisitedReportsActivity"
+            android:label="Посещенные доклады">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.EventActivity" />
+        </activity>
     </application>
 
 </manifest>
