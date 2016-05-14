@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.user.eventsupbase.Models.Event;
+import com.example.user.eventsupbase.Models.User;
 import com.example.user.eventsupbase.R;
 
 import java.io.Serializable;
@@ -27,7 +28,7 @@ import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 public class EventActivity extends AppCompatActivity {
 
     LinearLayout linearLayout;
-    Intent intent, intent2;
+    Intent intent1, intent2;
     int[] colors = new int[2];
     String TAG = "MY_LOG";
     List<Event> events;
@@ -48,8 +49,8 @@ public class EventActivity extends AppCompatActivity {
 
         linearLayout = (LinearLayout)findViewById(R.id.linearLayout);
 
-        intent = getIntent();
-        events = (List<Event>)intent.getSerializableExtra("Events");
+        intent1 = getIntent();
+        events = (List<Event>)intent1.getSerializableExtra("Events");
         ShowAllEvents(events);
     }
 
@@ -57,12 +58,14 @@ public class EventActivity extends AppCompatActivity {
         LayoutInflater layoutInflater = getLayoutInflater();
 
         for (int i = 0; i<events.size(); i++){
-            GridLayout gridLayout = (GridLayout)layoutInflater.inflate(R.layout.event_item, linearLayout, false);
+            GridLayout gridLayout = (GridLayout)layoutInflater.inflate(R.layout.item_event, linearLayout, false);
             gridLayout.setId(i);
             gridLayout.setBackgroundColor(colors[1]);
             TextView event_name = (TextView)gridLayout.findViewById(R.id.event_name);
             TextView event_date = (TextView) gridLayout.findViewById(R.id.event_date);
             TextView event_address = (TextView)gridLayout.findViewById(R.id.event_address);
+            TextView status = (TextView)gridLayout.findViewById(R.id.status);
+            status.setVisibility(View.GONE);
 
             event_name.setText((events.get(i).event_name));
             event_date.setText((events.get(i).date_start + " — " + events.get(i).date_finish));
@@ -78,6 +81,7 @@ public class EventActivity extends AppCompatActivity {
                     event_name.setTextColor(Color.parseColor("#a9a9a9"));
                     event_date.setTextColor(Color.parseColor("#a9a9a9"));
                     event_address.setTextColor(Color.parseColor("#a9a9a9"));
+                    status.setVisibility(View.VISIBLE);
                 }
             }
             catch(Exception e)
@@ -100,13 +104,19 @@ public class EventActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-//                Intent intent = new Intent(this, HomeActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                startActivity(intent);
                 finish();
                 return true;
             case R.id.action_visited:
-                Toast.makeText(getApplicationContext(), "Super!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, VisitedReportsActivity.class);
+//              intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                return true;
+            case R.id.action_exit:
+                User.login = null;
+                Intent intent3 = new Intent(this, StartActivity.class);
+                intent3.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent3);
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

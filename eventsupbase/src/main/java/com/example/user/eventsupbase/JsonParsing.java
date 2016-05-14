@@ -61,7 +61,7 @@ public class JsonParsing {
                 events.add(event);
             }
             return events;
-        } catch (JSONException e) {
+        } catch (Exception e) {
             Log.e(TAG, "JSON PARSING ERROR");
             return null;
         }
@@ -69,6 +69,27 @@ public class JsonParsing {
 
     //TODO: метод возвращающий список мероприятий
     public List<Report> GetReportsFromJsonString(String response){
-        return null;
+        try{
+            JSONArray reader = new JSONArray(response);
+            List<Report> reports = new ArrayList<>();
+
+            for(int i =0;i<reader.length();i++){
+                Report report = new Report();
+                JSONObject report_ob = reader.getJSONObject(i);
+                report.id_report = report_ob.getString("id_report");
+                report.report_name = report_ob.getString("report_name");
+                report.time = report_ob.getString("time");
+                report.report_address = report_ob.getString("report_address");
+                report.lecture_hall = report_ob.getString("lecture_hall");
+                report.description = report_ob.getString("description");
+                report.document = report_ob.getString("doc");
+                report.authors = new ArrayList<>();
+                reports.add(report);
+            }
+            return reports;
+        }catch (Exception e){
+            Log.e(TAG, "JSON PARSING ERROR");
+            return null;
+        }
     }
 }

@@ -2,8 +2,12 @@ package com.example.user.eventsupbase.Activities;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,7 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.user.eventsupbase.HttpClient;
 import com.example.user.eventsupbase.Models.Report;
+import com.example.user.eventsupbase.Models.User;
 import com.example.user.eventsupbase.R;
 
 import java.io.Serializable;
@@ -29,6 +35,8 @@ public class ReportActivity extends AppCompatActivity {
     String event_address;
     List<Report> reports;
     int description_max_length = 125;
+    int id_event;
+    CoordinatorLayout coordinatorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +51,8 @@ public class ReportActivity extends AppCompatActivity {
         colors[0] = Color.parseColor("#c9dcff");
         colors[1] = Color.parseColor("#acc9ff");
 
-        baseLinearLayout = (LinearLayout) findViewById(R.id.linearLayout);
+        baseLinearLayout = (LinearLayout) findViewById(R.id.reports_linearLayout);
+        coordinatorLayout = (CoordinatorLayout)findViewById(R.id.report_coordLayout);
 
         intent = getIntent();
         event_address = intent.getStringExtra("EventAddress");
@@ -62,7 +71,7 @@ public class ReportActivity extends AppCompatActivity {
 
         for (int i = 0; i < reports.size(); i++) {
             String authors = "";
-            LinearLayout linearLayout = (LinearLayout) layoutInflater.inflate(R.layout.report_item, baseLinearLayout, false);
+            LinearLayout linearLayout = (LinearLayout) layoutInflater.inflate(R.layout.item_report, baseLinearLayout, false);
             linearLayout.setBackgroundColor(colors[1]);
             linearLayout.setId(i);
             TextView report_title = (TextView) linearLayout.findViewById(R.id.c_report_title);
@@ -106,6 +115,7 @@ public class ReportActivity extends AppCompatActivity {
             } catch (Exception e) {
                 //TODO: реализовать обработку исключения
             }
+            registerForContextMenu(linearLayout);
             baseLinearLayout.addView(linearLayout);
         }
     }
@@ -122,13 +132,19 @@ public class ReportActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-//                Intent intent = new Intent(this, HomeActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                startActivity(intent);
                 finish();
                 return true;
             case R.id.action_visited:
-                Toast.makeText(getApplicationContext(), "Super!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, VisitedReportsActivity.class);
+//              intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                return true;
+            case R.id.action_exit:
+                User.login = null;
+                Intent intent3 = new Intent(this, StartActivity.class);
+                intent3.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent3);
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -139,5 +155,49 @@ public class ReportActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        String text = String.format("Отметить %s доклад посещенным", v.getId()+1);
+        menu.add(0, v.getId(), 0, text);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        int item_id = item.getItemId();
+        String report_id = reports.get(item_id).id_report;
+        String url_add_visited_report = String.format("http://diploma.welcomeru.ru/add/%s/%s", User.login, report_id);
+        new AddingVisitedReport().execute(url_add_visited_report);
+        return super.onContextItemSelected(item);
+    }
+
+    class AddingVisitedReport extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            HttpClient httpClient = new HttpClient(params[0]);
+            return httpClient.SendData();
+        }
+
+        protected void onPostExecute(String response) {
+            switch (response) {
+                case "-2":
+                    Snackbar.make(coordinatorLayout, "Нет соединения с интернетом!", Snackbar.LENGTH_LONG).show();
+                    break;
+                case "-1":
+                    Snackbar.make(coordinatorLayout, "Этот доклад уже отмечен вами как посещенный!", Snackbar.LENGTH_LONG).show();
+                    break;
+                case "0":
+                    Snackbar.make(coordinatorLayout, "Ошибка:( Попробуйте снова!", Snackbar.LENGTH_LONG).show();
+                    break;
+                case "1":
+                    Snackbar.make(coordinatorLayout, "Доклад добавлен в список посещенных", Snackbar.LENGTH_LONG).show();
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }

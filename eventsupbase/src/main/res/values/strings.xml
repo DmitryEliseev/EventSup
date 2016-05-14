@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">EventSup</string>
-    <string name="favourite_item">Посещенные мероприятия</string>
+    <string name="favourite_item">Посещенные доклады</string>
+    <string name="exit_item">Выход</string>
 </resources>

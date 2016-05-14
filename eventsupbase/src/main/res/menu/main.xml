@@ -6,4 +6,9 @@
         android:icon="@drawable/star"
         android:title="@string/favourite_item"
         app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_exit"
+        android:icon="@drawable/exit"
+        android:title="@string/exit_item"
+        app:showAsAction="always"/>
 </menu>

@@ -1,7 +1,5 @@
 package com.example.user.eventsupbase;
 
-import android.util.Log;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
@@ -21,7 +19,7 @@ public class HttpClient {
         this.url_address = url_address;
     }
 
-    public String getAllEventsData() {
+    public String getData() {
         try {
             URL url = new URL(url_address);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -44,20 +42,14 @@ public class HttpClient {
             }
         }
         catch (FileNotFoundException e) {
-            return "-2";
+            return "-3";
         } catch (UnknownHostException e){
-            return  "-1";
+            return  "-2";
         } catch (Exception e){
             return "0";
         }
     }
-
-    //TODO: реализовать запрос на посещенный мероприятия
-    public String getAllVisitedReports(){
-        return null;
-    }
-
-    public String RegisterOrLogin(){
+    public String SendData(){
         try {
             URL url = new URL(url_address);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -74,7 +66,40 @@ public class HttpClient {
                 urlConnection.disconnect();
             }
         }
-        catch (UnknownHostException e){
+        catch (FileNotFoundException e) {
+            return "-3";
+        } catch (UnknownHostException e){
+            return  "-2";
+        } catch (Exception e){
+            return "0";
+        }
+    }
+
+    public String getVisitedReports() {
+        try {
+            URL url = new URL(url_address);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            try {
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                StringBuilder stringBuilder = new StringBuilder();
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(line);
+                }
+                bufferedReader.close();
+
+                String response = stringBuilder.toString();
+                if(response.length()<5)
+                    return "-2";
+                else
+                    return stringBuilder.toString();
+            } finally {
+                urlConnection.disconnect();
+            }
+        }
+        catch (FileNotFoundException e) {
+            return "-3";
+        } catch (UnknownHostException e){
             return  "-2";
         } catch (Exception e){
             return "0";

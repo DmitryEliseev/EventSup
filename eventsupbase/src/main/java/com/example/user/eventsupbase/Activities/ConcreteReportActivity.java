@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.user.eventsupbase.Models.Report;
+import com.example.user.eventsupbase.Models.User;
 import com.example.user.eventsupbase.R;
 
 import java.util.List;
@@ -76,19 +77,24 @@ public class ConcreteReportActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-//                Intent intent = new Intent(this, HomeActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                startActivity(intent);
                 finish();
                 return true;
             case R.id.action_visited:
-                Toast.makeText(getApplicationContext(), "Super!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, VisitedReportsActivity.class);
+//              intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                return true;
+            case R.id.action_exit:
+                User.login = null;
+                Intent intent3 = new Intent(this, StartActivity.class);
+                intent3.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent3);
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);

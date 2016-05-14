@@ -9,7 +9,7 @@
         android:text="Регистрация"
         android:layout_gravity="center_horizontal"
         android:textSize="20dp"
-        android:layout_marginTop="150dp" />
+        android:layout_marginTop="120dp" />
 
     <EditText
         android:layout_width="match_parent"
@@ -20,8 +20,9 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:hint="Введите Ваш логин" />
+        android:layout_marginTop="20dp"
+        android:hint="Введите Ваш логин"
+        android:textSize="16dp" />
 
     <EditText
         android:layout_width="match_parent"
@@ -30,10 +31,11 @@
         android:ems="10"
         android:id="@+id/etReg_Pwd"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:hint="Введите Ваш пароль" />
+        android:hint="Введите Ваш пароль"
+        android:textSize="16dp" />
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -41,7 +43,8 @@
         android:text="Показать пароль"
         android:id="@+id/cbShowPwd"
         android:layout_gravity="left"
-        android:layout_marginLeft="10dp" />
+        android:layout_marginLeft="17dp"
+        android:layout_marginTop="10dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -50,8 +53,8 @@
         android:id="@+id/btnRegister"
         android:layout_gravity="center_horizontal"
         style="@style/Base.Widget.AppCompat.Button.Colored"
-        android:background="#4052b5"
+        android:background="#145789"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="20dp"/>
 </LinearLayout>

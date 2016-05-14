@@ -4,7 +4,10 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,8 +18,6 @@ import com.example.user.eventsupbase.Models.Event;
 import com.example.user.eventsupbase.QrReaderIntegrator.IntentIntegrator;
 import com.example.user.eventsupbase.QrReaderIntegrator.IntentResult;
 import com.example.user.eventsupbase.R;
-
-import org.w3c.dom.Text;
 
 import java.io.Serializable;
 import java.util.List;
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     ProgressDialog pDialog;
     String url_address_one_event;
     final String url_address_all_events = "http://diploma.welcomeru.ru/events";
+    CoordinatorLayout coordinatorLayout;
+    Snackbar snackbar = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +43,15 @@ public class MainActivity extends AppCompatActivity {
         intent2 = new Intent(this, EventActivity.class);
 
         intent = getIntent();
-        TextView twStatus = (TextView)findViewById(R.id.twStatus);
-        twStatus.setText(intent.getStringExtra("Status"));
+        String notion = intent.getStringExtra("Status");
+
+        coordinatorLayout = (CoordinatorLayout)findViewById(R.id.main_coordLayout);
+
+        snackbar = Snackbar.make(coordinatorLayout, notion, Snackbar.LENGTH_LONG);
+        View view = snackbar.getView();
+        TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
+        tv.setGravity(Gravity.CENTER_HORIZONTAL);
+        snackbar.show();
     }
 
     public void OnClick(View v) {
@@ -68,20 +78,20 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
             HttpClient httpClient = new HttpClient(params[0]);
-            return httpClient.getAllEventsData();
+            return httpClient.getData();
         }
 
         protected void onPostExecute(String response) {
             pDialog.dismiss();
             switch (response) {
-                case "-2":
-                    Toast.makeText(getApplicationContext(), "Such event was not found!", Toast.LENGTH_LONG).show();
+                case "-3":
+                    Toast.makeText(getApplicationContext(), "Такого события нет", Toast.LENGTH_LONG).show();
                     break;
-                case "-1":
-                    Toast.makeText(getApplicationContext(), "No Internet connection!", Toast.LENGTH_LONG).show();
+                case "-2":
+                    Toast.makeText(getApplicationContext(), "Нет соединения с интернетом", Toast.LENGTH_LONG).show();
                     break;
                 case "0":
-                    Toast.makeText(getApplicationContext(), "There was an unexpected mistake!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Ошибка:( Попробуйте снова!", Toast.LENGTH_LONG).show();
                     break;
                 default:
                     JsonParsing parsing = new JsonParsing();

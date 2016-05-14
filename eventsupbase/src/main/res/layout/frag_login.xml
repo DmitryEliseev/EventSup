@@ -9,7 +9,7 @@
         android:text="Авторизация"
         android:layout_gravity="center_horizontal"
         android:textSize="20dp"
-        android:layout_marginTop="150dp" />
+        android:layout_marginTop="120dp" />
 
     <EditText
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:hint="Введите Ваш логин" />
 
     <EditText
@@ -30,7 +30,7 @@
         android:ems="10"
         android:id="@+id/etLog_Pwd"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:hint="Введите Ваш пароль" />
@@ -42,8 +42,8 @@
         android:id="@+id/btnLogIn"
         android:layout_gravity="center_horizontal"
         style="@style/Base.Widget.AppCompat.Button.Colored"
-        android:background="#4052b5"
+        android:background="#145789"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="20dp" />
 </LinearLayout>
