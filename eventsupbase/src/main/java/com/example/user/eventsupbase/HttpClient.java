@@ -34,24 +34,18 @@ public class HttpClient {
                 }
                 bufferedReader.close();
 
-                String response = stringBuilder.toString();
-                if(response.length()<5)
-                    return "-2";
-                else
-                    return stringBuilder.toString();
+                return stringBuilder.toString();
             } finally {
                 urlConnection.disconnect();
             }
         }
         catch (FileNotFoundException e) {
-            return "-3";
-        } catch (UnknownHostException e){
-            return  "-2";
+            return "-2";
         } catch (Exception e){
             return "0";
         }
     }
-    public String SendData(){
+    public String SendDataOrReturnVisitedReports(){
         try {
             URL url = new URL(url_address);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -71,42 +65,7 @@ public class HttpClient {
             }
         }
         catch (FileNotFoundException e) {
-            return "-3";
-        } catch (UnknownHostException e){
-            return  "-2";
-        } catch (Exception e){
-            return "0";
-        }
-    }
-
-    public String getVisitedReports() {
-        try {
-            URL url = new URL(url_address);
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setConnectTimeout(1500);
-            urlConnection.setReadTimeout(1500);
-            try {
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                StringBuilder stringBuilder = new StringBuilder();
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    stringBuilder.append(line);
-                }
-                bufferedReader.close();
-
-                String response = stringBuilder.toString();
-                if(response.length()<5)
-                    return "-2";
-                else
-                    return stringBuilder.toString();
-            } finally {
-                urlConnection.disconnect();
-            }
-        }
-        catch (FileNotFoundException e) {
-            return "-3";
-        } catch (UnknownHostException e){
-            return  "-2";
+            return "-2";
         } catch (Exception e){
             return "0";
         }

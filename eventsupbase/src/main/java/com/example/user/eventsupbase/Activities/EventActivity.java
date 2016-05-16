@@ -18,6 +18,7 @@ import com.example.user.eventsupbase.Models.User;
 import com.example.user.eventsupbase.R;
 
 import java.io.Serializable;
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -64,7 +65,7 @@ public class EventActivity extends AppCompatActivity {
             TextView event_name = (TextView)gridLayout.findViewById(R.id.event_name);
             TextView event_date = (TextView) gridLayout.findViewById(R.id.event_date);
             TextView event_address = (TextView)gridLayout.findViewById(R.id.event_address);
-            TextView status = (TextView)gridLayout.findViewById(R.id.status);
+            TextView status = (TextView)gridLayout.findViewById(R.id.event_status);
             status.setVisibility(View.GONE);
 
             event_name.setText((events.get(i).event_name));
@@ -76,7 +77,8 @@ public class EventActivity extends AppCompatActivity {
             format.applyPattern("yyyy-MM-dd");
             try {
                 Date date_finish = format.parse(events.get(i).date_finish);
-                if (date_finish.before(Calendar.getInstance().getTime())) {
+                Date current_date = trim(Calendar.getInstance().getTime());
+                if (date_finish.before(current_date)) {
                     gridLayout.setBackgroundColor(colors[0]);
                     event_name.setTextColor(Color.parseColor("#a9a9a9"));
                     event_date.setTextColor(Color.parseColor("#a9a9a9"));
@@ -84,9 +86,7 @@ public class EventActivity extends AppCompatActivity {
                     status.setVisibility(View.VISIBLE);
                 }
             }
-            catch(Exception e)
-            {
-                //TODO: реализовать обработку исключения
+            catch(Exception e){
             }
             linearLayout.addView(gridLayout);
         }
@@ -106,6 +106,10 @@ public class EventActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.action_user:
+                String message = String.format("Username: %s", User.login);
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                return true;
             case R.id.action_visited:
                 Intent intent = new Intent(this, VisitedReportsActivity.class);
 //              intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -116,7 +120,6 @@ public class EventActivity extends AppCompatActivity {
                 Intent intent3 = new Intent(this, StartActivity.class);
                 intent3.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent3);
-
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -127,6 +130,16 @@ public class EventActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    public Date trim(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.HOUR, 0);
+        return calendar.getTime();
     }
 
 }

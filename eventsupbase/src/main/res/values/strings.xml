@@ -2,4 +2,8 @@
     <string name="app_name">EventSup</string>
     <string name="favourite_item">Посещенные доклады</string>
     <string name="exit_item">Выход</string>
+    <string name="user_item">Пользователь</string>
+    <string name="help_item">Справка</string>
+    <string name="title_activity_activity_pop_up">ActivityPopUp</string>
+    <string name="author_name">Елисеев Дмитрий</string>
 </resources>

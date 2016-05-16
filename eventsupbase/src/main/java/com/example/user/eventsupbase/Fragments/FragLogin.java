@@ -4,13 +4,10 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -42,12 +39,12 @@ public class FragLogin extends Fragment {
         Button btnLogin = (Button)v.findViewById(R.id.btnLogIn);
         btnLogin.setOnClickListener(new View.OnClickListener(){
             public void onClick (View view){
-                String url_register = "";
+                String url_login = "";
                 String login = etLogin.getText().toString();
                 String pwd = etPwd.getText().toString();
                 if((!login.isEmpty())&&(!pwd.isEmpty())) {
-                    url_register = String.format("http://diploma.welcomeru.ru/log/%s/%s", login, pwd);
-                    new GetJsonInfo().execute(url_register);
+                    url_login = String.format("http://diploma.welcomeru.ru/log/%s/%s", login, pwd);
+                    new GetJsonInfo().execute(url_login);
                 }
                 else Toast.makeText(getActivity(), "Некоторые поля незаполнены!", Toast.LENGTH_SHORT).show();
             }
@@ -62,22 +59,17 @@ public class FragLogin extends Fragment {
         @Override
         protected String doInBackground(String... params) {
             HttpClient httpClient = new HttpClient(params[0]);
-            return httpClient.SendData();
+            return httpClient.SendDataOrReturnVisitedReports();
         }
 
         protected void onPostExecute(String response) {
             switch (response) {
-                case "-3":
-                    Toast.makeText(getActivity(), "Логин и пароль не должны содержать в себе \"/\"", Toast.LENGTH_SHORT).show();
-                    break;
                 case "-2":
-                    Toast.makeText(getActivity(), "Нет соединения с интернетом!", Toast.LENGTH_SHORT).show();
-                    break;
                 case "-1":
                     Toast.makeText(getActivity(), "Неверный пароль или логин!", Toast.LENGTH_SHORT).show();
                     break;
                 case "0":
-                    Toast.makeText(getActivity(), "Ошибка:( Попробуйте еще раз!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Ошибка или нет соединения с интернетом!", Toast.LENGTH_SHORT).show();
                     break;
                 case "1":
                     User.login = etLogin.getText().toString();

@@ -79,6 +79,10 @@ public class ConcreteReportActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.action_user:
+                String message = String.format("Username: %s", User.login);
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                return true;
             case R.id.action_visited:
                 Intent intent = new Intent(this, VisitedReportsActivity.class);
 //              intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -89,7 +93,6 @@ public class ConcreteReportActivity extends AppCompatActivity {
                 Intent intent3 = new Intent(this, StartActivity.class);
                 intent3.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent3);
-
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

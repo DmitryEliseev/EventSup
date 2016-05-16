@@ -6,10 +6,10 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Авторизация"
+        android:text="Вход"
         android:layout_gravity="center_horizontal"
         android:textSize="20dp"
-        android:layout_marginTop="120dp" />
+        android:layout_marginTop="150dp" />
 
     <EditText
         android:layout_width="match_parent"
@@ -42,7 +42,7 @@
         android:id="@+id/btnLogIn"
         android:layout_gravity="center_horizontal"
         style="@style/Base.Widget.AppCompat.Button.Colored"
-        android:background="#145789"
+        android:background="#2ba9b0"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:layout_marginTop="20dp" />

@@ -71,14 +71,15 @@ public class VisitedReportsActivity extends AppCompatActivity {
         protected void onPostExecute(String response) {
             pDialog.dismiss();
             switch (response) {
-                case "-3":
-                    Toast.makeText(getApplicationContext(), "Такого события нет", Toast.LENGTH_LONG).show();
+                case "[]":
+                    Snackbar.make(coordinatorLayout, "Вы еще не посетили ни одного события", Snackbar.LENGTH_SHORT).show();
+                    break;
+                case "":
+                    Snackbar.make(coordinatorLayout, "Такого юзера в системе нет", Snackbar.LENGTH_SHORT).show();
                     break;
                 case "-2":
-                    Toast.makeText(getApplicationContext(), "Нет соединения с интернетом", Toast.LENGTH_LONG).show();
-                    break;
                 case "0":
-                    Toast.makeText(getApplicationContext(), "Ошибка:( Попробуйте снова!", Toast.LENGTH_LONG).show();
+                    Snackbar.make(coordinatorLayout, "Ошибка или нет соединения с интернетом!", Snackbar.LENGTH_LONG).show();
                     break;
                 default:
                     JsonParsing parsing = new JsonParsing();
@@ -100,8 +101,10 @@ public class VisitedReportsActivity extends AppCompatActivity {
             TextView report_date = (TextView) linearLayout.findViewById(R.id.report_date);
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)report_date.getLayoutParams();
             params.gravity = Gravity.CENTER_HORIZONTAL;
-            params.setMargins(0, 10, 0 , 10);
+            params.setMargins(0, 10, 0 , 20);
             report_date.setLayoutParams(params);
+            TextView status = (TextView)linearLayout.findViewById(R.id.report_status);
+            status.setVisibility(View.GONE);
 
             TextView report_address = (TextView) linearLayout.findViewById(R.id.report_address);
             report_address.setVisibility(View.GONE);
@@ -128,8 +131,7 @@ public class VisitedReportsActivity extends AppCompatActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
-        //TODO: сформулировать надпись для контекстного меню
-        String text = String.format("Отменить %s доклад посещение", v.getId()+1);
+        String text = String.format("Отменить посещение %s доклад", v.getId()+1);
         menu.add(0, v.getId(), 0, text);
     }
 
@@ -147,18 +149,20 @@ public class VisitedReportsActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
             HttpClient httpClient = new HttpClient(params[0]);
-            return httpClient.SendData();
+            return httpClient.SendDataOrReturnVisitedReports();
         }
 
         protected void onPostExecute(String response) {
             switch (response) {
-                case "-2":
-                    Snackbar.make(coordinatorLayout, "Нет соединения с интернетом!", Snackbar.LENGTH_LONG).show();
+                case "[]":
+                    Snackbar.make(coordinatorLayout, "Вы еще не посетили ни одного события", Snackbar.LENGTH_SHORT).show();
                     break;
                 case "":
                     Snackbar.make(coordinatorLayout, "Такого юзера в системе нет", Snackbar.LENGTH_SHORT).show();
+                    break;
+                case "-2":
                 case "0":
-                    Snackbar.make(coordinatorLayout, "Ошибка:( Попробуйте снова!", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(coordinatorLayout, "Ошибка или нет соединения с интернетом!", Snackbar.LENGTH_LONG).show();
                     break;
                 case "1":
                     finish();
@@ -176,11 +180,15 @@ public class VisitedReportsActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.action_user:
+                String message = String.format("Username: %s", User.login);
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                return true;
             case R.id.action_exit:
                 User.login = null;
-                Intent intent = new Intent(this, StartActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                Intent intent3 = new Intent(this, StartActivity.class);
+                intent3.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent3);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -189,7 +197,7 @@ public class VisitedReportsActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_only_exit_button, menu);
+        getMenuInflater().inflate(R.menu.main_exit_user, menu);
         return true;
     }
 

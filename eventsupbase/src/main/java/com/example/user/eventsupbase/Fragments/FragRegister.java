@@ -54,6 +54,7 @@ public class FragRegister extends Fragment {
                 String url_register = "";
                 String login = etLogin.getText().toString();
                 String pwd = etPwd.getText().toString();
+
                 if((!login.isEmpty())&&(!pwd.isEmpty())) {
                     url_register = String.format("http://diploma.welcomeru.ru/reg/%s/%s", login, pwd);
                     new GetJsonInfo().execute(url_register);
@@ -71,22 +72,19 @@ public class FragRegister extends Fragment {
         @Override
         protected String doInBackground(String... params) {
             HttpClient httpClient = new HttpClient(params[0]);
-            return httpClient.SendData();
+            return httpClient.SendDataOrReturnVisitedReports();
         }
 
         protected void onPostExecute(String response) {
             switch (response) {
-                case "-3":
+                case "-2":
                     Toast.makeText(getActivity(), "Логин и пароль не должны содержать в себе \"/\"", Toast.LENGTH_SHORT).show();
                     break;
-                case "-2":
-                    Toast.makeText(getActivity(), "Нет соединения с интернетом!", Toast.LENGTH_SHORT).show();
-                    break;
                 case "-1":
-                    Toast.makeText(getActivity(), "Неверный пароль или логин!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Такой пользователь уже существует!", Toast.LENGTH_SHORT).show();
                     break;
                 case "0":
-                    Toast.makeText(getActivity(), "Ошибка:( Попробуйте еще раз!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Ошибка или нет соединения с интернетом!", Toast.LENGTH_SHORT).show();
                     break;
                 case "1":
                     User.login = etLogin.getText().toString();

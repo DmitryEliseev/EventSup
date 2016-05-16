@@ -87,14 +87,13 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String response) {
             pDialog.dismiss();
             switch (response) {
+                case "[]":
+                case "\t":
                 case "-3":
                     Toast.makeText(getApplicationContext(), "Такого события нет", Toast.LENGTH_SHORT).show();
                     break;
-                case "-2":
-                    Toast.makeText(getApplicationContext(), "Нет соединения с интернетом", Toast.LENGTH_SHORT).show();
-                    break;
                 case "0":
-                    Toast.makeText(getApplicationContext(), "Ошибка:( Попробуйте снова!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Ошибка или нет соединения с интернетом!", Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     JsonParsing parsing = new JsonParsing();
@@ -119,16 +118,26 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_user:
+                String message = String.format("Username: %s", User.login);
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.action_visited:
+                if(User.login == null){
+                    Intent intent = new Intent(this, StartActivity.class);
+    //              intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }else {
+                    Intent intent = new Intent(this, VisitedReportsActivity.class);
+    //              intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }
+                return true;
             case R.id.action_exit:
                 User.login = null;
                 Intent intent3 = new Intent(this, StartActivity.class);
                 intent3.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent3);
-                return true;
-            case R.id.action_visited:
-                Intent intent = new Intent(this, VisitedReportsActivity.class);
-//              intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

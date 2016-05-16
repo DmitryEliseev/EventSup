@@ -36,7 +36,7 @@
             android:text="Сканировать QR код"
             android:onClick="OnClick"
             android:layout_marginTop="20dp"
-            android:background="#145789"
+            android:background="#2ba9b0"
             android:paddingStart="10dp"
             android:paddingEnd="10dp" />
 
@@ -47,10 +47,12 @@
             android:id="@+id/btnAllEvents"
             android:layout_gravity="center"
             style="@style/Base.Widget.AppCompat.Button.Colored"
-            android:background="#4052b5"
+            android:background="#4fd1d8"
             android:onClick="OnClick"
             android:layout_marginTop="20dp"
             android:paddingEnd="10dp"
             android:paddingStart="10dp" />
+
+
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

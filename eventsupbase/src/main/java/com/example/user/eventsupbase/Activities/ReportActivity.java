@@ -49,8 +49,8 @@ public class ReportActivity extends AppCompatActivity {
 
         intent2 = new Intent(this, ConcreteReportActivity.class);
 
-        colors[0] = Color.parseColor("#c9dcff");
-        colors[1] = Color.parseColor("#acc9ff");
+        colors[0] = Color.parseColor("#c9f5ff");
+        colors[1] = Color.parseColor("#abf4fd");
 
         baseLinearLayout = (LinearLayout) findViewById(R.id.reports_linearLayout);
         coordinatorLayout = (CoordinatorLayout)findViewById(R.id.report_coordLayout);
@@ -80,6 +80,9 @@ public class ReportActivity extends AppCompatActivity {
             TextView report_address = (TextView) linearLayout.findViewById(R.id.report_address);
             TextView report_authors = (TextView) linearLayout.findViewById(R.id.report_authors);
             TextView report_description = (TextView) linearLayout.findViewById(R.id.report_description);
+            TextView status = (TextView)linearLayout.findViewById(R.id.report_status);
+            status.setVisibility(View.GONE);
+
             report_title.setText(reports.get(i).report_name);
             report_date.setText(reports.get(i).time.substring(0, reports.get(i).time.length() - 3));
 
@@ -113,6 +116,7 @@ public class ReportActivity extends AppCompatActivity {
                     report_authors.setTextColor(Color.parseColor("#8592a9"));
                     report_description.setTextColor(Color.parseColor("#8592a9"));
                     registerForContextMenu(linearLayout);
+                    status.setVisibility(View.VISIBLE);
                 }
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage());
@@ -136,6 +140,10 @@ public class ReportActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.action_user:
+                String message = String.format("Username: %s", User.login);
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                return true;
             case R.id.action_visited:
                 Intent intent = new Intent(this, VisitedReportsActivity.class);
 //              intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -146,7 +154,6 @@ public class ReportActivity extends AppCompatActivity {
                 Intent intent3 = new Intent(this, StartActivity.class);
                 intent3.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent3);
-
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -162,8 +169,8 @@ public class ReportActivity extends AppCompatActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
-        String text = String.format("Отметить %s доклад посещенным", v.getId()+1);
-        menu.add(0, v.getId(), 0, text);
+        String text1 = String.format("Отметить %s доклад посещенным", v.getId()+1);
+        menu.add(0, v.getId(), 0, text1);
     }
 
     @Override
@@ -180,21 +187,20 @@ public class ReportActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
             HttpClient httpClient = new HttpClient(params[0]);
-            return httpClient.SendData();
+            return httpClient.SendDataOrReturnVisitedReports();
         }
 
         protected void onPostExecute(String response) {
             switch (response) {
-                case "-2":
-                    Snackbar.make(coordinatorLayout, "Нет соединения с интернетом!", Snackbar.LENGTH_LONG).show();
-                    break;
                 case "-1":
                     Snackbar.make(coordinatorLayout, "Этот доклад уже отмечен вами как посещенный!", Snackbar.LENGTH_LONG).show();
                     break;
                 case "":
                     Snackbar.make(coordinatorLayout, "Такого юзера в системе нет", Snackbar.LENGTH_SHORT).show();
+                    break;
+                case "-2":
                 case "0":
-                    Snackbar.make(coordinatorLayout, "Ошибка:( Попробуйте снова!", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(coordinatorLayout, "Ошибка или нет соединения с интернетом!", Snackbar.LENGTH_LONG).show();
                     break;
                 case "1":
                     Snackbar.make(coordinatorLayout, "Доклад добавлен в список посещенных", Snackbar.LENGTH_LONG).show();
