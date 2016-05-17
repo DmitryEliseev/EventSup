@@ -145,14 +145,17 @@ public class ReportActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.action_visited:
-                Intent intent = new Intent(this, VisitedReportsActivity.class);
-//              intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                if(User.login == null){
+                    Toast.makeText(getApplicationContext(), "Выйдите и водите в систему снова!", Toast.LENGTH_SHORT).show();
+                }else {
+                    Intent intent = new Intent(this, VisitedReportsActivity.class);
+                    startActivity(intent);
+                }
                 return true;
             case R.id.action_exit:
                 User.login = null;
                 Intent intent3 = new Intent(this, StartActivity.class);
-                intent3.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent3.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent3);
                 return true;
             default:
@@ -177,7 +180,7 @@ public class ReportActivity extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item) {
         int item_id = item.getItemId();
         String report_id = reports.get(item_id).id_report;
-        String url_add_visited_report = String.format("http://diploma.welcomeru.ru/add/%s/%s", User.login, report_id);
+        String url_add_visited_report = String.format("http://diploma.welcomeru.ru/add/%s/%s", User.md5_login, report_id);
         new AddingVisitedReport().execute(url_add_visited_report);
         return super.onContextItemSelected(item);
     }
@@ -196,7 +199,7 @@ public class ReportActivity extends AppCompatActivity {
                     Snackbar.make(coordinatorLayout, "Этот доклад уже отмечен вами как посещенный!", Snackbar.LENGTH_LONG).show();
                     break;
                 case "":
-                    Snackbar.make(coordinatorLayout, "Такого юзера в системе нет", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(coordinatorLayout, "Выйдите и войдите в систему снова", Snackbar.LENGTH_SHORT).show();
                     break;
                 case "-2":
                 case "0":

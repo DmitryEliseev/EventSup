@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.example.user.eventsupbase.Activities.MainActivity;
 import com.example.user.eventsupbase.HttpClient;
 import com.example.user.eventsupbase.Models.User;
+import com.example.user.eventsupbase.EncryptionClient;
 import com.example.user.eventsupbase.R;
 
 /**
@@ -21,9 +22,9 @@ import com.example.user.eventsupbase.R;
  */
 public class FragLogin extends Fragment {
 
-    EditText etPwd;
-    EditText etLogin;
+    EditText etPwd, etLogin;
     Intent intent;
+    String login, pwd;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -32,7 +33,7 @@ public class FragLogin extends Fragment {
         etLogin = (EditText)v.findViewById(R.id.etLog_Login);
         etPwd = (EditText)v.findViewById(R.id.etLog_Pwd);
 
-        //тестовые данные
+        //Тестовые данные для входа
         etLogin.setText("admin");
         etPwd.setText("admin");
 
@@ -40,9 +41,12 @@ public class FragLogin extends Fragment {
         btnLogin.setOnClickListener(new View.OnClickListener(){
             public void onClick (View view){
                 String url_login = "";
-                String login = etLogin.getText().toString();
-                String pwd = etPwd.getText().toString();
+                login = etLogin.getText().toString();
+                pwd = etPwd.getText().toString();
                 if((!login.isEmpty())&&(!pwd.isEmpty())) {
+                    EncryptionClient ec = new EncryptionClient();
+                    login = ec.md5(etLogin.getText().toString());
+                    pwd = ec.md5(etPwd.getText().toString());
                     url_login = String.format("http://diploma.welcomeru.ru/log/%s/%s", login, pwd);
                     new GetJsonInfo().execute(url_login);
                 }
@@ -73,6 +77,7 @@ public class FragLogin extends Fragment {
                     break;
                 case "1":
                     User.login = etLogin.getText().toString();
+                    User.md5_login = login;
                     intent.putExtra("Status", "Вход произведен успешно!");
                     startActivity(intent);
                 default:

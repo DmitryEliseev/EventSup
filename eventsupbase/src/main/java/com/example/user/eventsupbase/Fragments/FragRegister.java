@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.example.user.eventsupbase.Activities.MainActivity;
 import com.example.user.eventsupbase.HttpClient;
 import com.example.user.eventsupbase.Models.User;
+import com.example.user.eventsupbase.EncryptionClient;
 import com.example.user.eventsupbase.R;
 
 /**
@@ -25,9 +26,9 @@ import com.example.user.eventsupbase.R;
  */
 public class FragRegister extends Fragment {
 
-    EditText etPwd;
-    EditText etLogin;
+    EditText etPwd, etLogin;
     Intent intent;
+    String login, pwd;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,10 +53,12 @@ public class FragRegister extends Fragment {
         btnRegister.setOnClickListener(new OnClickListener(){
             public void onClick (View view){
                 String url_register = "";
-                String login = etLogin.getText().toString();
-                String pwd = etPwd.getText().toString();
-
+                login = etLogin.getText().toString();
+                pwd = etPwd.getText().toString();
                 if((!login.isEmpty())&&(!pwd.isEmpty())) {
+                    EncryptionClient ec = new EncryptionClient();
+                    login = ec.md5(etLogin.getText().toString());
+                    pwd = ec.md5(etPwd.getText().toString());
                     url_register = String.format("http://diploma.welcomeru.ru/reg/%s/%s", login, pwd);
                     new GetJsonInfo().execute(url_register);
                 }
@@ -88,6 +91,7 @@ public class FragRegister extends Fragment {
                     break;
                 case "1":
                     User.login = etLogin.getText().toString();
+                    User.md5_login = login;
                     intent.putExtra("Status", "Регистрация произведена успешно!");
                     startActivity(intent);
                 default:

@@ -48,7 +48,7 @@ public class VisitedReportsActivity extends AppCompatActivity {
         baseLinearLayout = (LinearLayout) findViewById(R.id.visited_linearLayout);
         coordinatorLayout = (CoordinatorLayout)findViewById(R.id.visited_coordLayout);
 
-        url_get_all_visited_reports = String.format("http://diploma.welcomeru.ru/visited/%s", User.login);
+        url_get_all_visited_reports = String.format("http://diploma.welcomeru.ru/visited/%s", User.md5_login);
         new GetJsonInfo().execute(url_get_all_visited_reports);
     }
 
@@ -95,7 +95,7 @@ public class VisitedReportsActivity extends AppCompatActivity {
 
         for (int i = 0; i < reports.size(); i++) {
             LinearLayout linearLayout = (LinearLayout) layoutInflater.inflate(R.layout.item_report, baseLinearLayout, false);
-            linearLayout.setBackgroundColor(Color.parseColor("#c9dcff"));
+            linearLayout.setBackgroundColor(Color.parseColor("#c9f5ff"));
             linearLayout.setId(i);
             TextView report_title = (TextView) linearLayout.findViewById(R.id.c_report_title);
             TextView report_date = (TextView) linearLayout.findViewById(R.id.report_date);
@@ -139,7 +139,7 @@ public class VisitedReportsActivity extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item) {
         int item_id = item.getItemId();
         String report_id = reports.get(item_id).id_report;
-        String url_remove_visited_report = String.format("http://diploma.welcomeru.ru/remove/%s/%s", User.login, report_id);
+        String url_remove_visited_report = String.format("http://diploma.welcomeru.ru/remove/%s/%s", User.md5_login, report_id);
         new RemovingVisitedReport().execute(url_remove_visited_report);
         return super.onContextItemSelected(item);
     }
@@ -187,7 +187,7 @@ public class VisitedReportsActivity extends AppCompatActivity {
             case R.id.action_exit:
                 User.login = null;
                 Intent intent3 = new Intent(this, StartActivity.class);
-                intent3.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent3.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent3);
                 return true;
             default:

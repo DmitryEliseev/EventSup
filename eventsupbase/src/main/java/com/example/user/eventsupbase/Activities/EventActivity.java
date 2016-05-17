@@ -52,7 +52,13 @@ public class EventActivity extends AppCompatActivity {
 
         intent1 = getIntent();
         events = (List<Event>)intent1.getSerializableExtra("Events");
-        ShowAllEvents(events);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ShowAllEvents(events);
+            }
+        }).start();
     }
 
     public void ShowAllEvents (List<Event> events){
@@ -111,14 +117,17 @@ public class EventActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.action_visited:
-                Intent intent = new Intent(this, VisitedReportsActivity.class);
-//              intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                if(User.login == null){
+                    Toast.makeText(getApplicationContext(), "Выйдите и водите в систему снова!", Toast.LENGTH_SHORT).show();
+                }else {
+                    Intent intent = new Intent(this, VisitedReportsActivity.class);
+                    startActivity(intent);
+                }
                 return true;
             case R.id.action_exit:
                 User.login = null;
                 Intent intent3 = new Intent(this, StartActivity.class);
-                intent3.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent3.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent3);
                 return true;
             default:
