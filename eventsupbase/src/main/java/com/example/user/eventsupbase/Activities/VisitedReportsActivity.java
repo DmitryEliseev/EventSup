@@ -14,16 +14,20 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.user.eventsupbase.Adapters.VisitedReportsAdapter;
 import com.example.user.eventsupbase.HttpClient;
 import com.example.user.eventsupbase.JsonParsing;
 import com.example.user.eventsupbase.Models.Report;
 import com.example.user.eventsupbase.Models.User;
 import com.example.user.eventsupbase.R;
 
+import java.io.Serializable;
 import java.util.List;
 
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
@@ -33,8 +37,9 @@ public class VisitedReportsActivity extends AppCompatActivity {
     ProgressDialog pDialog;
     String url_get_all_visited_reports;
     List<Report> reports;
-    LinearLayout baseLinearLayout;
     CoordinatorLayout coordinatorLayout;
+    VisitedReportsAdapter adapter;
+    ListView lvVisitedReports;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +50,6 @@ public class VisitedReportsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        baseLinearLayout = (LinearLayout) findViewById(R.id.visited_linearLayout);
         coordinatorLayout = (CoordinatorLayout)findViewById(R.id.visited_coordLayout);
 
         url_get_all_visited_reports = String.format("http://diploma.welcomeru.ru/visited/%s", User.md5_login);
@@ -84,64 +88,35 @@ public class VisitedReportsActivity extends AppCompatActivity {
                 default:
                     JsonParsing parsing = new JsonParsing();
                     reports = parsing.GetReportsFromJsonString(response);
-                    ShowAllReports(reports);
+
+                    adapter = new VisitedReportsAdapter(getApplicationContext(), reports);
+                    lvVisitedReports = (ListView) findViewById(R.id.lvVisitedReports);
+                    lvVisitedReports.setLongClickable(true);
+                    lvVisitedReports.setAdapter(adapter);
+                    registerForContextMenu(lvVisitedReports);
                     break;
             }
         }
     }
 
-    private void ShowAllReports(List<Report> reports) {
-        LayoutInflater layoutInflater = getLayoutInflater();
-
-        for (int i = 0; i < reports.size(); i++) {
-            LinearLayout linearLayout = (LinearLayout) layoutInflater.inflate(R.layout.item_report, baseLinearLayout, false);
-            linearLayout.setBackgroundColor(Color.parseColor("#c9f5ff"));
-            linearLayout.setId(i);
-            TextView report_title = (TextView) linearLayout.findViewById(R.id.c_report_title);
-            TextView report_date = (TextView) linearLayout.findViewById(R.id.report_date);
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)report_date.getLayoutParams();
-            params.gravity = Gravity.CENTER_HORIZONTAL;
-            params.setMargins(0, 10, 0 , 20);
-            report_date.setLayoutParams(params);
-            TextView status = (TextView)linearLayout.findViewById(R.id.report_status);
-            status.setVisibility(View.GONE);
-
-            TextView report_address = (TextView) linearLayout.findViewById(R.id.report_address);
-            report_address.setVisibility(View.GONE);
-            TextView report_authors = (TextView) linearLayout.findViewById(R.id.report_authors);
-            report_authors.setVisibility(View.GONE);
-            TextView report_description = (TextView) linearLayout.findViewById(R.id.report_description);
-            report_description.setVisibility(View.GONE);
-
-            report_title.setText(reports.get(i).report_name);
-            report_date.setText(reports.get(i).time.substring(0, reports.get(i).time.length() - 3));
-
-            report_title.setTextColor(Color.parseColor("#8592a9"));
-            report_date.setTextColor(Color.parseColor("#8592a9"));
-
-            registerForContextMenu(linearLayout);
-            baseLinearLayout.addView(linearLayout);
-        }
-    }
-
-    public void onGridClick(View v) {
-
-    }
-
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
-        String text = String.format("Отменить посещение %s доклад", v.getId()+1);
-        menu.add(0, v.getId(), 0, text);
+        if (v.getId()==R.id.lvVisitedReports) {
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+            String menu_title = reports.get(info.position).report_name.substring(0, 18) + "...";
+            menu.setHeaderTitle(menu_title);
+            menu.add(0, v.getId(), 0, "Отменить посещение");
+        }
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        int item_id = item.getItemId();
-        String report_id = reports.get(item_id).id_report;
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        String report_id = reports.get(info.position).id_report;
         String url_remove_visited_report = String.format("http://diploma.welcomeru.ru/remove/%s/%s", User.md5_login, report_id);
         new RemovingVisitedReport().execute(url_remove_visited_report);
-        return super.onContextItemSelected(item);
+        return true;
     }
 
     class RemovingVisitedReport extends AsyncTask<String, Void, String> {

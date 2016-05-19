@@ -1,7 +1,6 @@
 package com.example.user.eventsupbase.Activities;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -9,18 +8,19 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.user.eventsupbase.Adapters.EventAdapter;
 import com.example.user.eventsupbase.HttpClient;
 import com.example.user.eventsupbase.Models.Report;
 import com.example.user.eventsupbase.Models.User;
 import com.example.user.eventsupbase.R;
+import com.example.user.eventsupbase.Adapters.ReportAdapter;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -30,14 +30,12 @@ import java.util.List;
 
 public class ReportActivity extends AppCompatActivity {
 
-    LinearLayout baseLinearLayout;
     Intent intent, intent2;
-    int[] colors = new int[2];
     String event_address;
     List<Report> reports;
-    int description_max_length = 125;
     CoordinatorLayout coordinatorLayout;
-    String TAG = "MY_LOG";
+    ReportAdapter adapter;
+    String TAG = "MY_TAG", url_add_visited_report;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,81 +47,17 @@ public class ReportActivity extends AppCompatActivity {
 
         intent2 = new Intent(this, ConcreteReportActivity.class);
 
-        colors[0] = Color.parseColor("#c9f5ff");
-        colors[1] = Color.parseColor("#abf4fd");
-
-        baseLinearLayout = (LinearLayout) findViewById(R.id.reports_linearLayout);
         coordinatorLayout = (CoordinatorLayout)findViewById(R.id.report_coordLayout);
 
         intent = getIntent();
         event_address = intent.getStringExtra("EventAddress");
         reports = (List<Report>) intent.getSerializableExtra("Reports");
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ShowAllReports(reports);
-            }
-        }).start();
-    }
-    private void ShowAllReports(List<Report> reports) {
-        LayoutInflater layoutInflater = getLayoutInflater();
-        String address = "";
-
-        for (int i = 0; i < reports.size(); i++) {
-            String authors = "";
-            LinearLayout linearLayout = (LinearLayout) layoutInflater.inflate(R.layout.item_report, baseLinearLayout, false);
-            linearLayout.setBackgroundColor(colors[1]);
-            linearLayout.setId(i);
-            TextView report_title = (TextView) linearLayout.findViewById(R.id.c_report_title);
-            TextView report_date = (TextView) linearLayout.findViewById(R.id.report_date);
-            TextView report_address = (TextView) linearLayout.findViewById(R.id.report_address);
-            TextView report_authors = (TextView) linearLayout.findViewById(R.id.report_authors);
-            TextView report_description = (TextView) linearLayout.findViewById(R.id.report_description);
-            TextView status = (TextView)linearLayout.findViewById(R.id.report_status);
-            status.setVisibility(View.GONE);
-
-            report_title.setText(reports.get(i).report_name);
-            report_date.setText(reports.get(i).time.substring(0, reports.get(i).time.length() - 3));
-
-            if (reports.get(i).report_address.equals("null"))
-                address = event_address + ", aудитория № " + reports.get(i).lecture_hall;
-            else
-                address = reports.get(i).report_address + ", aудитория №" + reports.get(i).lecture_hall;
-            report_address.setText(address);
-
-            for (int j = 0; j < reports.get(i).authors.size() - 1; j++)
-                authors += reports.get(i).authors.get(j) + ", ";
-            authors += reports.get(i).authors.get(reports.get(i).authors.size() - 1);
-            report_authors.setText(authors);
-
-            String descrip = reports.get(i).description;
-            if (descrip.length() < description_max_length)
-                report_description.setText(descrip);
-            else
-                report_description.setText(descrip.substring(0, Math.min(descrip.length(), description_max_length)) + "...");
-
-            //Изменение отражения события, если оно уже прошло
-            SimpleDateFormat format = new SimpleDateFormat();
-            format.applyPattern("yyyy-MM-dd");
-            try {
-                Date date_finish = format.parse(reports.get(i).time);
-                if (date_finish.before(Calendar.getInstance().getTime())) {
-                    linearLayout.setBackgroundColor(colors[0]);
-                    report_title.setTextColor(Color.parseColor("#8592a9"));
-                    report_date.setTextColor(Color.parseColor("#8592a9"));
-                    report_address.setTextColor(Color.parseColor("#8592a9"));
-                    report_authors.setTextColor(Color.parseColor("#8592a9"));
-                    report_description.setTextColor(Color.parseColor("#8592a9"));
-                    registerForContextMenu(linearLayout);
-                    status.setVisibility(View.VISIBLE);
-                }
-            } catch (Exception e) {
-                Log.e(TAG, e.getMessage());
-            }
-
-            baseLinearLayout.addView(linearLayout);
-        }
+        adapter = new ReportAdapter(this, reports, event_address);
+        ListView lvReport = (ListView) findViewById(R.id.lvReport);
+        lvReport.setLongClickable(true);
+        lvReport.setAdapter(adapter);
+        registerForContextMenu(lvReport);
     }
 
     public void onGridClick(View v) {
@@ -172,17 +106,33 @@ public class ReportActivity extends AppCompatActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
-        String text1 = String.format("Отметить %s доклад посещенным", v.getId()+1);
-        menu.add(0, v.getId(), 0, text1);
+        if (v.getId()==R.id.lvReport) {
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+            String menu_title = reports.get(info.position).report_name.substring(0, 18)+"...";
+            menu.setHeaderTitle(menu_title);
+
+            SimpleDateFormat format = new SimpleDateFormat();
+            format.applyPattern("yyyy-MM-dd");
+            try {
+                Date date_finish = format.parse(reports.get(info.position).time);
+                Date current_date = EventAdapter.trim(Calendar.getInstance().getTime());
+                if (date_finish.before(current_date)) {
+                    menu.add(0, v.getId(), 0, "Отметить посещенным");
+                }
+            }
+            catch (Exception e){
+                Log.e(TAG, e.getMessage());
+            }
+        }
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        int item_id = item.getItemId();
-        String report_id = reports.get(item_id).id_report;
-        String url_add_visited_report = String.format("http://diploma.welcomeru.ru/add/%s/%s", User.md5_login, report_id);
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        String report_id = reports.get(info.position).id_report;
+        url_add_visited_report = String.format("http://diploma.welcomeru.ru/add/%s/%s", User.md5_login, report_id);
         new AddingVisitedReport().execute(url_add_visited_report);
-        return super.onContextItemSelected(item);
+        return true;
     }
 
     class AddingVisitedReport extends AsyncTask<String, Void, String> {

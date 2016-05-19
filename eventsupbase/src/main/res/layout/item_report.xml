@@ -2,14 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
-    android:onClick="onGridClick">
+    android:layout_margin="5dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Text"
-        android:id="@+id/c_report_title"
+        android:id="@+id/visited_report_title"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
         android:textSize="16dp"
@@ -21,49 +20,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Text"
-        android:id="@+id/report_date"
+        android:id="@+id/visited_report_date"
         android:layout_marginTop="25dp"
         android:layout_marginLeft="10dp"
         android:textSize="15dp"
         android:textStyle="normal"
         android:textColor="#001845" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/report_address"
-        android:layout_marginLeft="10dp"
-        android:textSize="15dp"
-        android:textStyle="normal"
-        android:textColor="#001845" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/report_description"
-        android:layout_marginLeft="10dp"
-        android:textSize="13dp"
-        android:textColor="#001845" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/report_authors"
-        android:layout_marginLeft="10dp"
-        android:textSize="15dp"
-        android:textColor="#001845"
-        android:layout_marginBottom="10dp" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Доклад уже прочитан"
-        android:id="@+id/report_status"
-        android:layout_marginBottom="10dp"
-        android:textColor="#ff7a7a"
-        android:layout_marginLeft="10dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="-5dp" />
 </LinearLayout>

@@ -1,5 +1,4 @@
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/report_coordLayout"
     android:layout_width="match_parent"
@@ -11,17 +10,14 @@
         android:layout_height="fill_parent"
         android:orientation="vertical">
 
-        <ScrollView
-            android:id="@+id/scroll"
+        <ListView
+            android:id="@+id/lvReport"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp">
-
-            <LinearLayout
-                android:id="@+id/reports_linearLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"></LinearLayout>
-        </ScrollView>
+            android:layout_weight="1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"/>
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
