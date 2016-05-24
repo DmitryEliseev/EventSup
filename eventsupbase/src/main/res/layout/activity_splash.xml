@@ -8,7 +8,7 @@
         android:layout_width="327dp"
         android:layout_height="348dp"
         android:id="@+id/ivPicture"
-        android:src="@drawable/splash_screen"
+        android:src="@drawable/big_icon"
         android:adjustViewBounds="false"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="80dp" />

@@ -67,7 +67,6 @@ public class JsonParsing {
         }
     }
 
-    //TODO: метод возвращающий список мероприятий
     public List<Report> GetReportsFromJsonString(String response){
         try{
             JSONArray reader = new JSONArray(response);

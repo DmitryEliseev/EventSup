@@ -1,6 +1,7 @@
 package com.example.user.eventsupbase.Activities;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -10,6 +11,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.user.eventsupbase.Adapters.EventAdapter;
+import com.example.user.eventsupbase.DB.DbToken;
 import com.example.user.eventsupbase.Models.Event;
 import com.example.user.eventsupbase.Models.User;
 import com.example.user.eventsupbase.R;
@@ -58,20 +60,24 @@ public class EventActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.action_visited:
+                    Intent intent = new Intent(this, VisitedReportsActivity.class);
+                    startActivity(intent);
+                return true;
             case R.id.action_user:
                 String message = String.format("Username: %s", User.login);
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                 return true;
-            case R.id.action_visited:
-                if(User.login == null){
-                    Toast.makeText(getApplicationContext(), "Выйдите и водите в систему снова!", Toast.LENGTH_SHORT).show();
-                }else {
-                    Intent intent = new Intent(this, VisitedReportsActivity.class);
-                    startActivity(intent);
-                }
-                return true;
             case R.id.action_exit:
-                User.login = null;
+                DbToken dbToken = null;
+                try {
+                    dbToken = new DbToken(this);
+                    SQLiteDatabase db = dbToken.getWritableDatabase();
+                    db.execSQL("DELETE FROM "+DbToken.TABLE_NAME);
+                }finally {
+                    dbToken.close();
+                }
+
                 Intent intent3 = new Intent(this, StartActivity.class);
                 intent3.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent3);

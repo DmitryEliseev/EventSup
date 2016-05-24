@@ -2,32 +2,28 @@ package com.example.user.eventsupbase.Activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Color;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.user.eventsupbase.Adapters.VisitedReportsAdapter;
+import com.example.user.eventsupbase.DB.DbToken;
 import com.example.user.eventsupbase.HttpClient;
 import com.example.user.eventsupbase.JsonParsing;
 import com.example.user.eventsupbase.Models.Report;
 import com.example.user.eventsupbase.Models.User;
 import com.example.user.eventsupbase.R;
 
-import java.io.Serializable;
 import java.util.List;
 
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
@@ -52,7 +48,7 @@ public class VisitedReportsActivity extends AppCompatActivity {
 
         coordinatorLayout = (CoordinatorLayout)findViewById(R.id.visited_coordLayout);
 
-        url_get_all_visited_reports = String.format("http://diploma.welcomeru.ru/visited/%s", User.md5_login);
+        url_get_all_visited_reports = String.format("http://diploma.welcomeru.ru/visited/%s", User.token);
         new GetJsonInfo().execute(url_get_all_visited_reports);
     }
 
@@ -114,7 +110,7 @@ public class VisitedReportsActivity extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
         String report_id = reports.get(info.position).id_report;
-        String url_remove_visited_report = String.format("http://diploma.welcomeru.ru/remove/%s/%s", User.md5_login, report_id);
+        String url_remove_visited_report = String.format("http://diploma.welcomeru.ru/remove/%s/%s", User.token, report_id);
         new RemovingVisitedReport().execute(url_remove_visited_report);
         return true;
     }
@@ -160,7 +156,15 @@ public class VisitedReportsActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.action_exit:
-                User.login = null;
+                DbToken dbToken = null;
+                try {
+                    dbToken = new DbToken(this);
+                    SQLiteDatabase db = dbToken.getWritableDatabase();
+                    db.execSQL("DELETE FROM "+DbToken.TABLE_NAME);
+                }finally {
+                    dbToken.close();
+                }
+
                 Intent intent3 = new Intent(this, StartActivity.class);
                 intent3.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent3);
@@ -172,7 +176,7 @@ public class VisitedReportsActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_exit_user, menu);
+        getMenuInflater().inflate(R.menu.main_user_exit, menu);
         return true;
     }
 

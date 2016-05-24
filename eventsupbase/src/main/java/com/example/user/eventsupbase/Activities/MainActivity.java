@@ -2,6 +2,7 @@ package com.example.user.eventsupbase.Activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.user.eventsupbase.DB.DbToken;
 import com.example.user.eventsupbase.HttpClient;
 import com.example.user.eventsupbase.JsonParsing;
 import com.example.user.eventsupbase.Models.Event;
@@ -99,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
                     JsonParsing parsing = new JsonParsing();
                     events = parsing.GetEventFromJsonString(response);
                     intent2.putExtra("Events", (Serializable) events);
-                    // TODO: настроить флаги intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
                     startActivity(intent2);
                     break;
             }
@@ -118,20 +119,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_visited:
+                    Intent intent = new Intent(this, VisitedReportsActivity.class);
+                    startActivity(intent);
+                return true;
             case R.id.action_user:
                 String message = String.format("Username: %s", User.login);
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                 return true;
-            case R.id.action_visited:
-                if(User.login == null){
-                    Toast.makeText(getApplicationContext(), "Выйдите и водите в систему снова!", Toast.LENGTH_SHORT).show();
-                }else {
-                    Intent intent = new Intent(this, VisitedReportsActivity.class);
-                    startActivity(intent);
-                }
-                return true;
             case R.id.action_exit:
-                User.login = null;
+                DbToken dbToken = null;
+                try {
+                    dbToken = new DbToken(this);
+                    SQLiteDatabase db = dbToken.getWritableDatabase();
+                    db.execSQL("DELETE FROM "+DbToken.TABLE_NAME);
+                }finally {
+                    dbToken.close();
+                }
+
                 Intent intent3 = new Intent(this, StartActivity.class);
                 intent3.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent3);

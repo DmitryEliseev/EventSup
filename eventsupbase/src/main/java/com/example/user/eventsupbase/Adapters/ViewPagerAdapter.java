@@ -1,4 +1,4 @@
-package com.example.user.eventsupbase;
+package com.example.user.eventsupbase.Adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
