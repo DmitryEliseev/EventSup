@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.user.eventsupbase.DB.DbToken;
+import com.example.user.eventsupbase.HttpClient;
 import com.example.user.eventsupbase.Models.Report;
 import com.example.user.eventsupbase.Models.User;
 import com.example.user.eventsupbase.R;
@@ -82,8 +83,12 @@ public class ConcreteReportActivity extends AppCompatActivity {
                 finish();
                 return true;
             case R.id.action_visited:
+                if (HttpClient.hasConnection(this)) {
                     Intent intent = new Intent(this, VisitedReportsActivity.class);
                     startActivity(intent);
+                } else {
+                    Toast.makeText(this, "Для выполнения этого действия необходимо соединение с интернетом!", Toast.LENGTH_SHORT).show();
+                }
                 return true;
             case R.id.action_user:
                 String message = String.format("Username: %s", User.login);
@@ -94,8 +99,8 @@ public class ConcreteReportActivity extends AppCompatActivity {
                 try {
                     dbToken = new DbToken(this);
                     SQLiteDatabase db = dbToken.getWritableDatabase();
-                    db.execSQL("DELETE FROM "+DbToken.TABLE_NAME);
-                }finally {
+                    db.execSQL("DELETE FROM " + DbToken.TABLE_NAME);
+                } finally {
                     dbToken.close();
                 }
 
@@ -107,6 +112,7 @@ public class ConcreteReportActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);

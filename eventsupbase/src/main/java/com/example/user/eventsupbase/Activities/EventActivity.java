@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.user.eventsupbase.Adapters.EventAdapter;
 import com.example.user.eventsupbase.DB.DbToken;
+import com.example.user.eventsupbase.HttpClient;
 import com.example.user.eventsupbase.Models.Event;
 import com.example.user.eventsupbase.Models.User;
 import com.example.user.eventsupbase.R;
@@ -39,7 +40,6 @@ public class EventActivity extends AppCompatActivity {
 
         intent1 = getIntent();
         events = (List<Event>)intent1.getSerializableExtra("Events");
-
         EventAdapter adapter = new EventAdapter(this, events);
         ListView lvEvent = (ListView)findViewById(R.id.lvEvent);
         lvEvent.setAdapter(adapter);
@@ -61,8 +61,12 @@ public class EventActivity extends AppCompatActivity {
                 finish();
                 return true;
             case R.id.action_visited:
+                if (HttpClient.hasConnection(this)) {
                     Intent intent = new Intent(this, VisitedReportsActivity.class);
                     startActivity(intent);
+                } else {
+                    Toast.makeText(this, "Для выполнения этого действия необходимо соединение с интернетом!", Toast.LENGTH_SHORT).show();
+                }
                 return true;
             case R.id.action_user:
                 String message = String.format("Username: %s", User.login);

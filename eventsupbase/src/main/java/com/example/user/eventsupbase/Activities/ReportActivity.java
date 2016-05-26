@@ -17,12 +17,12 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.user.eventsupbase.Adapters.EventAdapter;
+import com.example.user.eventsupbase.Adapters.ReportAdapter;
 import com.example.user.eventsupbase.DB.DbToken;
 import com.example.user.eventsupbase.HttpClient;
 import com.example.user.eventsupbase.Models.Report;
 import com.example.user.eventsupbase.Models.User;
 import com.example.user.eventsupbase.R;
-import com.example.user.eventsupbase.Adapters.ReportAdapter;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -49,7 +49,7 @@ public class ReportActivity extends AppCompatActivity {
 
         intent2 = new Intent(this, ConcreteReportActivity.class);
 
-        coordinatorLayout = (CoordinatorLayout)findViewById(R.id.report_coordLayout);
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.report_coordLayout);
 
         intent = getIntent();
         event_address = intent.getStringExtra("EventAddress");
@@ -77,8 +77,12 @@ public class ReportActivity extends AppCompatActivity {
                 finish();
                 return true;
             case R.id.action_visited:
+                if (HttpClient.hasConnection(this)) {
                     Intent intent = new Intent(this, VisitedReportsActivity.class);
                     startActivity(intent);
+                } else {
+                    Toast.makeText(this, "Для выполнения этого действия необходимо соединение с интернетом!", Toast.LENGTH_SHORT).show();
+                }
                 return true;
             case R.id.action_user:
                 String message = String.format("Username: %s", User.login);
@@ -89,8 +93,8 @@ public class ReportActivity extends AppCompatActivity {
                 try {
                     dbToken = new DbToken(this);
                     SQLiteDatabase db = dbToken.getWritableDatabase();
-                    db.execSQL("DELETE FROM "+DbToken.TABLE_NAME);
-                }finally {
+                    db.execSQL("DELETE FROM " + DbToken.TABLE_NAME);
+                } finally {
                     dbToken.close();
                 }
 
@@ -112,9 +116,9 @@ public class ReportActivity extends AppCompatActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
-        if (v.getId()==R.id.lvReport) {
-            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
-            String menu_title = reports.get(info.position).report_name.substring(0, 18)+"...";
+        if (v.getId() == R.id.lvReport) {
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+            String menu_title = reports.get(info.position).report_name.substring(0, 18) + "...";
             menu.setHeaderTitle(menu_title);
 
             SimpleDateFormat format = new SimpleDateFormat();
@@ -125,8 +129,7 @@ public class ReportActivity extends AppCompatActivity {
                 if (date_finish.before(current_date)) {
                     menu.add(0, v.getId(), 0, "Отметить посещенным");
                 }
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 Log.e(TAG, e.getMessage());
             }
         }
@@ -134,7 +137,7 @@ public class ReportActivity extends AppCompatActivity {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         String report_id = reports.get(info.position).id_report;
         url_add_visited_report = String.format("http://diploma.welcomeru.ru/add/%s/%s", User.token, report_id);
         new AddingVisitedReport().execute(url_add_visited_report);
@@ -159,10 +162,10 @@ public class ReportActivity extends AppCompatActivity {
                     break;
                 case "-2":
                 case "0":
-                    Snackbar.make(coordinatorLayout, "Ошибка или нет соединения с интернетом!", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(coordinatorLayout, "Для этого действия необходимо соединение с интернетом!", Snackbar.LENGTH_SHORT).show();
                     break;
                 case "1":
-                    Snackbar.make(coordinatorLayout, "Доклад добавлен в список посещенных", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(coordinatorLayout, "Доклад добавлен в список посещенных", Snackbar.LENGTH_SHORT).show();
                     break;
                 default:
                     break;

@@ -47,21 +47,24 @@ public class FragLogin extends Fragment {
         Button btnLogin = (Button)v.findViewById(R.id.btnLogIn);
         btnLogin.setOnClickListener(new View.OnClickListener(){
             public void onClick (View view){
-                String url_login = "";
-                login = etLogin.getText().toString();
-                pwd = etPwd.getText().toString();
-                if((!login.isEmpty())&&(!pwd.isEmpty())) {
-                    if(login.length()>36)
-                        Toast.makeText(getActivity(), "Логин не может быть больше 36 символов!", Toast.LENGTH_SHORT).show();
-                    else {
-                        EncryptionClient ec = new EncryptionClient();
-                        login = ec.md5(etLogin.getText().toString());
-                        pwd = ec.md5(etPwd.getText().toString());
-                        url_login = String.format("http://diploma.welcomeru.ru/log/%s/%s", login, pwd);
-                        new GetJsonInfo().execute(url_login);
-                    }
-                }
-                else Toast.makeText(getActivity(), "Некоторые поля незаполнены!", Toast.LENGTH_SHORT).show();
+                if(HttpClient.hasConnection(getActivity())) {
+                    String url_login = "";
+                    login = etLogin.getText().toString();
+                    pwd = etPwd.getText().toString();
+                    if ((!login.isEmpty()) && (!pwd.isEmpty())) {
+                        if (login.length() > 36)
+                            Toast.makeText(getActivity(), "Логин не может быть больше 36 символов!", Toast.LENGTH_SHORT).show();
+                        else {
+                            EncryptionClient ec = new EncryptionClient();
+                            login = ec.md5(etLogin.getText().toString());
+                            pwd = ec.md5(etPwd.getText().toString());
+                            url_login = String.format("http://diploma.welcomeru.ru/log/%s/%s", login, pwd);
+                            new GetJsonInfo().execute(url_login);
+                        }
+                    } else
+                        Toast.makeText(getActivity(), "Некоторые поля незаполнены!", Toast.LENGTH_SHORT).show();
+                }else
+                    Toast.makeText(getActivity(), "Для выполнения этого действия необходимо соединение с интернетом!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -84,7 +87,7 @@ public class FragLogin extends Fragment {
                     Toast.makeText(getActivity(), "Неверный пароль или логин!", Toast.LENGTH_SHORT).show();
                     break;
                 case "0":
-                    Toast.makeText(getActivity(), "Ошибка или нет соединения с интернетом!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Ошибка или потеряно соединение с интернетом!", Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     try{

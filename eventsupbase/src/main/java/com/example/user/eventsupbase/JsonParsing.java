@@ -1,14 +1,20 @@
 package com.example.user.eventsupbase;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.example.user.eventsupbase.Models.Event;
 import com.example.user.eventsupbase.Models.Report;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,14 +24,16 @@ import java.util.List;
  */
 public class JsonParsing {
 
-    String TAG = "MY_LOG";
+    final String TAG = "MY_LOG";
+    final String FILE_NAME = "data.json";
 
-    public List<Event> GetEventFromJsonString(String response){
+
+    public List<Event> GetEventFromJsonString(String response) {
         try {
             JSONArray reader = new JSONArray(response);
             List<Event> events = new ArrayList<>();
 
-            for(int k = 0; k<reader.length(); k++) {
+            for (int k = 0; k < reader.length(); k++) {
                 JSONObject dataJson = reader.getJSONObject(k);
                 Event event = new Event();
                 event.id_event = dataJson.getString("id_event");
@@ -67,12 +75,12 @@ public class JsonParsing {
         }
     }
 
-    public List<Report> GetReportsFromJsonString(String response){
-        try{
+    public List<Report> GetReportsFromJsonString(String response) {
+        try {
             JSONArray reader = new JSONArray(response);
             List<Report> reports = new ArrayList<>();
 
-            for(int i =0;i<reader.length();i++){
+            for (int i = 0; i < reader.length(); i++) {
                 Report report = new Report();
                 JSONObject report_ob = reader.getJSONObject(i);
                 report.id_report = report_ob.getString("id_report");
@@ -86,7 +94,39 @@ public class JsonParsing {
                 reports.add(report);
             }
             return reports;
-        }catch (Exception e){
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+            return null;
+        }
+    }
+
+    public void WriteDataToFile(String response, Context c) {
+        try {
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(c.openFileOutput(FILE_NAME, c.MODE_PRIVATE)));
+            bw.write(response);
+            bw.close();
+            Log.d(TAG, "Файл записан");
+        } catch (FileNotFoundException e) {
+            Log.e(TAG, e.getMessage());
+        } catch (IOException e) {
+            Log.e(TAG, e.getMessage());
+        }
+    }
+
+    public String ReadDataFromFile(Context c) {
+        String response = "";
+        String reader = "";
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(c.openFileInput(FILE_NAME)));
+            while ((reader = br.readLine()) != null) {
+                response += reader;
+            }
+            br.close();
+            return response;
+        } catch (FileNotFoundException e) {
+            Log.e(TAG, e.getMessage());
+            return null;
+        } catch (IOException e) {
             Log.e(TAG, e.getMessage());
             return null;
         }

@@ -34,10 +34,14 @@ public class MainActivity extends AppCompatActivity {
     List<Event> events;
     Intent intent1, intent2;
     ProgressDialog pDialog;
-    String url_address_one_event;
-    final String url_address_all_events = "http://diploma.welcomeru.ru/events";
+    String url_address_one_event = null;
     CoordinatorLayout coordinatorLayout;
     Snackbar snackbar = null;
+    JsonParsing parser;
+
+    final String url_address_all_events = "http://diploma.welcomeru.ru/events";
+    final String TAG = "MY_LOG";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
         intent1 = getIntent();
         String notion = intent1.getStringExtra("Status");
 
-        coordinatorLayout = (CoordinatorLayout)findViewById(R.id.main_coordLayout);
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.main_coordLayout);
+        parser = new JsonParsing();
 
         snackbar = Snackbar.make(coordinatorLayout, notion, Snackbar.LENGTH_LONG);
         View view = snackbar.getView();
@@ -60,10 +65,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void OnClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btnScanQrCode:
-                IntentIntegrator integrator = new IntentIntegrator(this);
-                integrator.initiateScan();
+                if (HttpClient.hasConnection(this)) {
+                    IntentIntegrator integrator = new IntentIntegrator(this);
+                    integrator.initiateScan();
+                } else {
+                    Toast.makeText(this, "Для выполнения этого действия необходимо соединение с интернетом!", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.btnAllEvents:
                 new GetJsonInfo().execute(url_address_all_events);
@@ -95,11 +104,19 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Такого события нет", Toast.LENGTH_SHORT).show();
                     break;
                 case "0":
-                    Toast.makeText(getApplicationContext(), "Ошибка или нет соединения с интернетом!", Toast.LENGTH_SHORT).show();
+                    response = parser.ReadDataFromFile(getApplicationContext());
+                    if(response==null){
+                        Toast.makeText(getApplicationContext(), "Сохраненных данных пока нет, подключитесь к интернету", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+                    events = parser.GetEventFromJsonString(response);
+                    intent2.putExtra("Events", (Serializable) events);
+                    startActivity(intent2);
                     break;
                 default:
-                    JsonParsing parsing = new JsonParsing();
-                    events = parsing.GetEventFromJsonString(response);
+                    if (url_address_one_event == null)
+                        parser.WriteDataToFile(response, getApplicationContext());
+                    events = parser.GetEventFromJsonString(response);
                     intent2.putExtra("Events", (Serializable) events);
                     startActivity(intent2);
                     break;
@@ -120,8 +137,12 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_visited:
+                if (HttpClient.hasConnection(this)) {
                     Intent intent = new Intent(this, VisitedReportsActivity.class);
                     startActivity(intent);
+                } else {
+                    Toast.makeText(this, "Для выполнения этого действия необходимо соединение с интернетом!", Toast.LENGTH_SHORT).show();
+                }
                 return true;
             case R.id.action_user:
                 String message = String.format("Username: %s", User.login);
@@ -132,8 +153,8 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     dbToken = new DbToken(this);
                     SQLiteDatabase db = dbToken.getWritableDatabase();
-                    db.execSQL("DELETE FROM "+DbToken.TABLE_NAME);
-                }finally {
+                    db.execSQL("DELETE FROM " + DbToken.TABLE_NAME);
+                } finally {
                     dbToken.close();
                 }
 

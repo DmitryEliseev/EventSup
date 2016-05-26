@@ -46,7 +46,7 @@ public class VisitedReportsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        coordinatorLayout = (CoordinatorLayout)findViewById(R.id.visited_coordLayout);
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.visited_coordLayout);
 
         url_get_all_visited_reports = String.format("http://diploma.welcomeru.ru/visited/%s", User.token);
         new GetJsonInfo().execute(url_get_all_visited_reports);
@@ -79,7 +79,7 @@ public class VisitedReportsActivity extends AppCompatActivity {
                     break;
                 case "-2":
                 case "0":
-                    Snackbar.make(coordinatorLayout, "Ошибка или нет соединения с интернетом!", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(coordinatorLayout, "Подключитесь к интернету, чтобы работать с данной вкладкой!", Snackbar.LENGTH_SHORT).show();
                     break;
                 default:
                     JsonParsing parsing = new JsonParsing();
@@ -98,7 +98,7 @@ public class VisitedReportsActivity extends AppCompatActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
-        if (v.getId()==R.id.lvVisitedReports) {
+        if (v.getId() == R.id.lvVisitedReports) {
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
             String menu_title = reports.get(info.position).report_name.substring(0, 18) + "...";
             menu.setHeaderTitle(menu_title);
@@ -108,7 +108,7 @@ public class VisitedReportsActivity extends AppCompatActivity {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         String report_id = reports.get(info.position).id_report;
         String url_remove_visited_report = String.format("http://diploma.welcomeru.ru/remove/%s/%s", User.token, report_id);
         new RemovingVisitedReport().execute(url_remove_visited_report);
@@ -133,7 +133,7 @@ public class VisitedReportsActivity extends AppCompatActivity {
                     break;
                 case "-2":
                 case "0":
-                    Snackbar.make(coordinatorLayout, "Ошибка или нет соединения с интернетом!", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(coordinatorLayout, "Для этого действия необходимо соединение с интернетом!", Snackbar.LENGTH_SHORT).show();
                     break;
                 case "1":
                     finish();
@@ -160,8 +160,8 @@ public class VisitedReportsActivity extends AppCompatActivity {
                 try {
                     dbToken = new DbToken(this);
                     SQLiteDatabase db = dbToken.getWritableDatabase();
-                    db.execSQL("DELETE FROM "+DbToken.TABLE_NAME);
-                }finally {
+                    db.execSQL("DELETE FROM " + DbToken.TABLE_NAME);
+                } finally {
                     dbToken.close();
                 }
 

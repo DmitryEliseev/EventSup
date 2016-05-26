@@ -59,21 +59,24 @@ public class FragRegister extends Fragment {
         Button btnRegister = (Button)v.findViewById(R.id.btnRegister);
         btnRegister.setOnClickListener(new OnClickListener(){
             public void onClick (View view){
-                String url_register = "";
-                login = etLogin.getText().toString();
-                pwd = etPwd.getText().toString();
-                if((!login.isEmpty())&&(!pwd.isEmpty())) {
-                    if(login.length()>36)
-                        Toast.makeText(getActivity(), "Логин не может быть больше 36 символов!", Toast.LENGTH_SHORT).show();
-                    else {
-                        EncryptionClient ec = new EncryptionClient();
-                        login = ec.md5(etLogin.getText().toString());
-                        pwd = ec.md5(etPwd.getText().toString());
-                        url_register = String.format("http://diploma.welcomeru.ru/reg/%s/%s", login, pwd);
-                        new GetJsonInfo().execute(url_register);
-                    }
-                }
-                else Toast.makeText(getActivity(), "Некоторые поля незаполнены!", Toast.LENGTH_SHORT).show();
+                if(HttpClient.hasConnection(getActivity())) {
+                    String url_register = "";
+                    login = etLogin.getText().toString();
+                    pwd = etPwd.getText().toString();
+                    if ((!login.isEmpty()) && (!pwd.isEmpty())) {
+                        if (login.length() > 36)
+                            Toast.makeText(getActivity(), "Логин не может быть больше 36 символов!", Toast.LENGTH_SHORT).show();
+                        else {
+                            EncryptionClient ec = new EncryptionClient();
+                            login = ec.md5(etLogin.getText().toString());
+                            pwd = ec.md5(etPwd.getText().toString());
+                            url_register = String.format("http://diploma.welcomeru.ru/reg/%s/%s", login, pwd);
+                            new GetJsonInfo().execute(url_register);
+                        }
+                    } else
+                        Toast.makeText(getActivity(), "Некоторые поля незаполнены!", Toast.LENGTH_SHORT).show();
+                }else
+                    Toast.makeText(getActivity(), "Для выполнения этого действия необходимо соединение с интернетом!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -98,7 +101,7 @@ public class FragRegister extends Fragment {
                     Toast.makeText(getActivity(), "Такой пользователь уже существует!", Toast.LENGTH_SHORT).show();
                     break;
                 case "0":
-                    Toast.makeText(getActivity(), "Ошибка или нет соединения с интернетом!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Ошибка или потеряно соединение с интернетом!", Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     try{

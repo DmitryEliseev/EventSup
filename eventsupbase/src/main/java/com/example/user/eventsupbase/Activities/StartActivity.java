@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
-import com.example.user.eventsupbase.R;
 import com.example.user.eventsupbase.Adapters.ViewPagerAdapter;
+import com.example.user.eventsupbase.R;
 
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 

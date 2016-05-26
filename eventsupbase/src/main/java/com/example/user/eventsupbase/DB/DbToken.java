@@ -23,8 +23,6 @@ public class DbToken extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "tokens.db";
     private static final int DATABASE_VERSION = 2;
 
-    String TAG = "MY_LOG";
-
     //Строка для создания таблицы
     private static final String DATABASE_CREATE = "create table "
             + TABLE_NAME + "("
