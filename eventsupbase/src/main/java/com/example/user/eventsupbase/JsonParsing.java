@@ -86,11 +86,6 @@ public class JsonParsing {
                 report.id_report = report_ob.getString("id_report");
                 report.report_name = report_ob.getString("report_name");
                 report.time = report_ob.getString("time");
-                report.report_address = report_ob.getString("report_address");
-                report.lecture_hall = report_ob.getString("lecture_hall");
-                report.description = report_ob.getString("description");
-                report.document = report_ob.getString("doc");
-                report.authors = new ArrayList<>();
                 reports.add(report);
             }
             return reports;

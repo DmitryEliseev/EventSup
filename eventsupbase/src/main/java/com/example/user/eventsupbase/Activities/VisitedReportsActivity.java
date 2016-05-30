@@ -84,7 +84,6 @@ public class VisitedReportsActivity extends AppCompatActivity {
                 default:
                     JsonParsing parsing = new JsonParsing();
                     reports = parsing.GetReportsFromJsonString(response);
-
                     adapter = new VisitedReportsAdapter(getApplicationContext(), reports);
                     lvVisitedReports = (ListView) findViewById(R.id.lvVisitedReports);
                     lvVisitedReports.setLongClickable(true);
@@ -166,7 +165,6 @@ public class VisitedReportsActivity extends AppCompatActivity {
                 }
 
                 Intent intent3 = new Intent(this, StartActivity.class);
-                intent3.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent3);
                 return true;
             default:

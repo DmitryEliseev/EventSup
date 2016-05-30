@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.user.eventsupbase.Activities.MainActivity;
+import com.example.user.eventsupbase.Activities.SplashActivity;
 import com.example.user.eventsupbase.DB.DbToken;
 import com.example.user.eventsupbase.HttpClient;
 import com.example.user.eventsupbase.Models.User;
@@ -41,9 +42,9 @@ public class FragRegister extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.frag_register, container, false);
 
-        etLogin = (EditText)v.findViewById(R.id.etReg_Login);
-        etPwd = (EditText)v.findViewById(R.id.etReg_Pwd);
-        CheckBox showPwd = (CheckBox)v.findViewById(R.id.cbShowPwd);
+        etLogin = (EditText) v.findViewById(R.id.etReg_Login);
+        etPwd = (EditText) v.findViewById(R.id.etReg_Pwd);
+        CheckBox showPwd = (CheckBox) v.findViewById(R.id.cbShowPwd);
 
         showPwd.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -56,32 +57,28 @@ public class FragRegister extends Fragment {
             }
         });
 
-        Button btnRegister = (Button)v.findViewById(R.id.btnRegister);
-        btnRegister.setOnClickListener(new OnClickListener(){
-            public void onClick (View view){
-                if(HttpClient.hasConnection(getActivity())) {
+        Button btnRegister = (Button) v.findViewById(R.id.btnRegister);
+        btnRegister.setOnClickListener(new OnClickListener() {
+            public void onClick(View view) {
+                if (HttpClient.hasConnection(getActivity())) {
                     String url_register = "";
                     login = etLogin.getText().toString();
                     pwd = etPwd.getText().toString();
                     if ((!login.isEmpty()) && (!pwd.isEmpty())) {
-                        if (login.length() > 36)
-                            Toast.makeText(getActivity(), "Логин не может быть больше 36 символов!", Toast.LENGTH_SHORT).show();
-                        else {
-                            EncryptionClient ec = new EncryptionClient();
-                            login = ec.md5(etLogin.getText().toString());
-                            pwd = ec.md5(etPwd.getText().toString());
-                            url_register = String.format("http://diploma.welcomeru.ru/reg/%s/%s", login, pwd);
-                            new GetJsonInfo().execute(url_register);
-                        }
+                        EncryptionClient ec = new EncryptionClient();
+                        login = ec.md5(etLogin.getText().toString());
+                        pwd = ec.md5(etPwd.getText().toString());
+                        url_register = String.format("http://diploma.welcomeru.ru/reg/%s/%s", login, pwd);
+                        new GetJsonInfo().execute(url_register);
                     } else
                         Toast.makeText(getActivity(), "Некоторые поля незаполнены!", Toast.LENGTH_SHORT).show();
-                }else
-                    Toast.makeText(getActivity(), "Для выполнения этого действия необходимо соединение с интернетом!", Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(getActivity(), "Для регистрации необходимо соединение с интернетом!", Toast.LENGTH_SHORT).show();
             }
         });
 
         intent = new Intent(FragRegister.this.getActivity(), MainActivity.class);
-        return  v;
+        return v;
     }
 
     class GetJsonInfo extends AsyncTask<String, Void, String> {
@@ -104,7 +101,7 @@ public class FragRegister extends Fragment {
                     Toast.makeText(getActivity(), "Ошибка или потеряно соединение с интернетом!", Toast.LENGTH_SHORT).show();
                     break;
                 default:
-                    try{
+                    try {
                         String[] resp = response.split(";");
                         String token = resp[1];
                         User.token = token;
@@ -121,13 +118,13 @@ public class FragRegister extends Fragment {
                         values.put(DbToken.COLUMN_USER_LOGIN, User.login);
                         db.insert(DbToken.TABLE_NAME, null, values);
 
-                        intent.putExtra("Status", "Регистрация произведена успешно!");
+                        intent.putExtra(SplashActivity.AUTH_STATUS, "Регистрация произведена успешно!");
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         break;
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                    finally {
+                    } finally {
                         dbToken.close();
                     }
             }

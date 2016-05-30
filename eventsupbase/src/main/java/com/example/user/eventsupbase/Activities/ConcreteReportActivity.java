@@ -44,17 +44,12 @@ public class ConcreteReportActivity extends AppCompatActivity {
         c_report_pdfdoc = (TextView) findViewById(R.id.c_report_pdfdoc);
 
         intent = getIntent();
-        List<Report> reports = (List<Report>) intent.getSerializableExtra("Reports");
-        int id = intent.getIntExtra("ReportID", -1);
+        List<Report> reports = (List<Report>) intent.getSerializableExtra(EventActivity.REPORTS);
+        int id = intent.getIntExtra(ReportActivity.REPORT_ID, -1);
 
         report = reports.get(id);
-        event_address = intent.getStringExtra("EventAddress");
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ShowConcreteReport(report);
-            }
-        }).start();
+        event_address = intent.getStringExtra(EventActivity.EVENT_ADDRESS);
+        ShowConcreteReport(report);
     }
 
     private void ShowConcreteReport(Report report) {
@@ -67,7 +62,6 @@ public class ConcreteReportActivity extends AppCompatActivity {
             address = event_address + ", аудитория № " + report.lecture_hall;
         else address = report.report_address + ", aудитория №" + report.lecture_hall;
         c_report_address.setText(address);
-
         c_report_description.setText(report.description);
 
         //Присваивание TextView ссылки
@@ -105,7 +99,6 @@ public class ConcreteReportActivity extends AppCompatActivity {
                 }
 
                 Intent intent3 = new Intent(this, StartActivity.class);
-                intent3.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent3);
                 return true;
             default:

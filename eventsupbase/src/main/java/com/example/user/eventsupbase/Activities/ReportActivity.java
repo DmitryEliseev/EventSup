@@ -32,12 +32,14 @@ import java.util.List;
 
 public class ReportActivity extends AppCompatActivity {
 
-    Intent intent, intent2;
-    String event_address;
+    Intent intent1, intent2;
+    String event_address, url_add_visited_report;
     List<Report> reports;
     CoordinatorLayout coordinatorLayout;
     ReportAdapter adapter;
-    String TAG = "MY_TAG", url_add_visited_report;
+    final String TAG = "MY_LOG";
+
+    static public final String REPORT_ID = "ReportID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,26 +49,25 @@ public class ReportActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        intent2 = new Intent(this, ConcreteReportActivity.class);
-
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.report_coordLayout);
 
-        intent = getIntent();
-        event_address = intent.getStringExtra("EventAddress");
-        reports = (List<Report>) intent.getSerializableExtra("Reports");
-
+        intent1 = getIntent();
+        event_address = intent1.getStringExtra(EventActivity.EVENT_ADDRESS);
+        reports = (List<Report>) intent1.getSerializableExtra(EventActivity.REPORTS);
         adapter = new ReportAdapter(this, reports, event_address);
         ListView lvReport = (ListView) findViewById(R.id.lvReport);
         lvReport.setLongClickable(true);
         lvReport.setAdapter(adapter);
         registerForContextMenu(lvReport);
+
+        intent2 = new Intent(this, ConcreteReportActivity.class);
     }
 
     public void onGridClick(View v) {
         int id = v.getId();
-        intent2.putExtra("Reports", (Serializable) reports);
-        intent2.putExtra("ReportID", id);
-        intent2.putExtra("EventAddress", event_address);
+        intent2.putExtra(EventActivity.REPORTS, (Serializable) reports);
+        intent2.putExtra(REPORT_ID, id);
+        intent2.putExtra(EventActivity.EVENT_ADDRESS, event_address);
         startActivity(intent2);
     }
 
@@ -99,7 +100,6 @@ public class ReportActivity extends AppCompatActivity {
                 }
 
                 Intent intent3 = new Intent(this, StartActivity.class);
-                intent3.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent3);
                 return true;
             default:

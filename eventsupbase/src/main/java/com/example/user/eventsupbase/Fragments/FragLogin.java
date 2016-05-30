@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.user.eventsupbase.Activities.MainActivity;
+import com.example.user.eventsupbase.Activities.SplashActivity;
 import com.example.user.eventsupbase.DB.DbToken;
 import com.example.user.eventsupbase.HttpClient;
 import com.example.user.eventsupbase.Models.User;
@@ -37,39 +38,31 @@ public class FragLogin extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.frag_login, container, false);
 
-        etLogin = (EditText)v.findViewById(R.id.etLog_Login);
-        etPwd = (EditText)v.findViewById(R.id.etLog_Pwd);
+        etLogin = (EditText) v.findViewById(R.id.etLog_Login);
+        etPwd = (EditText) v.findViewById(R.id.etLog_Pwd);
 
-        //TODO: удалить тестовые данные для входа
-        etLogin.setText("admin");
-        etPwd.setText("admin");
-
-        Button btnLogin = (Button)v.findViewById(R.id.btnLogIn);
-        btnLogin.setOnClickListener(new View.OnClickListener(){
-            public void onClick (View view){
-                if(HttpClient.hasConnection(getActivity())) {
+        Button btnLogin = (Button) v.findViewById(R.id.btnLogIn);
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                if (HttpClient.hasConnection(getActivity())) {
                     String url_login = "";
                     login = etLogin.getText().toString();
                     pwd = etPwd.getText().toString();
                     if ((!login.isEmpty()) && (!pwd.isEmpty())) {
-                        if (login.length() > 36)
-                            Toast.makeText(getActivity(), "Логин не может быть больше 36 символов!", Toast.LENGTH_SHORT).show();
-                        else {
-                            EncryptionClient ec = new EncryptionClient();
-                            login = ec.md5(etLogin.getText().toString());
-                            pwd = ec.md5(etPwd.getText().toString());
-                            url_login = String.format("http://diploma.welcomeru.ru/log/%s/%s", login, pwd);
-                            new GetJsonInfo().execute(url_login);
-                        }
+                        EncryptionClient ec = new EncryptionClient();
+                        login = ec.md5(etLogin.getText().toString());
+                        pwd = ec.md5(etPwd.getText().toString());
+                        url_login = String.format("http://diploma.welcomeru.ru/log/%s/%s", login, pwd);
+                        new GetJsonInfo().execute(url_login);
                     } else
                         Toast.makeText(getActivity(), "Некоторые поля незаполнены!", Toast.LENGTH_SHORT).show();
-                }else
-                    Toast.makeText(getActivity(), "Для выполнения этого действия необходимо соединение с интернетом!", Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(getActivity(), "Для входа необходимо соединение с интернетом!", Toast.LENGTH_SHORT).show();
             }
         });
 
         intent = new Intent(FragLogin.this.getActivity(), MainActivity.class);
-        return  v;
+        return v;
     }
 
     class GetJsonInfo extends AsyncTask<String, Void, String> {
@@ -90,7 +83,7 @@ public class FragLogin extends Fragment {
                     Toast.makeText(getActivity(), "Ошибка или потеряно соединение с интернетом!", Toast.LENGTH_SHORT).show();
                     break;
                 default:
-                    try{
+                    try {
                         String[] resp = response.split(";");
                         String token = resp[1];
                         User.token = token;
@@ -106,13 +99,13 @@ public class FragLogin extends Fragment {
                         values.put(DbToken.COLUMN_USER_LOGIN, User.login);
                         db.insert(DbToken.TABLE_NAME, null, values);
 
-                        intent.putExtra("Status", "Вход произведен успешно!");
+                        intent.putExtra(SplashActivity.AUTH_STATUS, "Вход произведен успешно!");
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         break;
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                    finally {
+                    } finally {
                         dbToken.close();
                     }
             }

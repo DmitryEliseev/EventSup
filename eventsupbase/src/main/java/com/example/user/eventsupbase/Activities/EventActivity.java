@@ -27,6 +27,9 @@ public class EventActivity extends AppCompatActivity {
     Intent intent1, intent2;
     List<Event> events;
 
+    public static final String REPORTS = "Reports";
+    public static final String EVENT_ADDRESS = "EventAddress";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,21 +39,20 @@ public class EventActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        intent2 = new Intent(this, ReportActivity.class);
-
         intent1 = getIntent();
-        events = (List<Event>)intent1.getSerializableExtra("Events");
+        events = (List<Event>) intent1.getSerializableExtra(MainActivity.EVENTS);
         EventAdapter adapter = new EventAdapter(this, events);
-        ListView lvEvent = (ListView)findViewById(R.id.lvEvent);
+        ListView lvEvent = (ListView) findViewById(R.id.lvEvent);
         lvEvent.setAdapter(adapter);
         registerForContextMenu(lvEvent);
+
+        intent2 = new Intent(this, ReportActivity.class);
     }
 
-    public void onGridClick (View v)
-    {
+    public void onGridClick(View v) {
         int id = v.getId();
-        intent2.putExtra("Reports", (Serializable) events.get(id).reports);
-        intent2.putExtra("EventAddress", events.get(id).event_address);
+        intent2.putExtra(REPORTS, (Serializable) events.get(id).reports);
+        intent2.putExtra(EVENT_ADDRESS, events.get(id).event_address);
         startActivity(intent2);
     }
 
@@ -77,13 +79,12 @@ public class EventActivity extends AppCompatActivity {
                 try {
                     dbToken = new DbToken(this);
                     SQLiteDatabase db = dbToken.getWritableDatabase();
-                    db.execSQL("DELETE FROM "+DbToken.TABLE_NAME);
-                }finally {
+                    db.execSQL("DELETE FROM " + DbToken.TABLE_NAME);
+                } finally {
                     dbToken.close();
                 }
 
                 Intent intent3 = new Intent(this, StartActivity.class);
-                intent3.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent3);
                 return true;
             default:

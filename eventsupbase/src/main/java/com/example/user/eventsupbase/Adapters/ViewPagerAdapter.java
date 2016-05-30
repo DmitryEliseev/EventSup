@@ -10,10 +10,10 @@ import com.example.user.eventsupbase.Fragments.FragRegister;
 /**
  * Created by User on 13.05.2016.
  */
-public class ViewPagerAdapter extends FragmentPagerAdapter{
+public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     final int PAGE_COUNT = 2;
-    private String tabTitles[] = new String[] { "Вход", "Регистрация"};
+    private String tabTitles[] = new String[]{"Вход", "Регистрация"};
 
     @Override
     public int getCount() {

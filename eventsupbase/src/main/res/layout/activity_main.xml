@@ -43,7 +43,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Все события"
+            android:text="Все конференции"
             android:id="@+id/btnAllEvents"
             android:layout_gravity="center"
             style="@style/Base.Widget.AppCompat.Button.Colored"

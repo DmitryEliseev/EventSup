@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
     final String url_address_all_events = "http://diploma.welcomeru.ru/events";
     final String TAG = "MY_LOG";
-
+    public static final String EVENTS = "Events";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,15 +49,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setRequestedOrientation(SCREEN_ORIENTATION_PORTRAIT);
 
-        intent2 = new Intent(this, EventActivity.class);
-
         intent1 = getIntent();
-        String notion = intent1.getStringExtra("Status");
+        String status = intent1.getStringExtra(SplashActivity.AUTH_STATUS);
 
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.main_coordLayout);
+        intent2 = new Intent(this, EventActivity.class);
         parser = new JsonParsing();
 
-        snackbar = Snackbar.make(coordinatorLayout, notion, Snackbar.LENGTH_LONG);
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.main_coordLayout);
+        snackbar = Snackbar.make(coordinatorLayout, status, Snackbar.LENGTH_LONG);
         View view = snackbar.getView();
         TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
         tv.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -105,19 +104,19 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case "0":
                     response = parser.ReadDataFromFile(getApplicationContext());
-                    if(response==null){
+                    if (response == null) {
                         Toast.makeText(getApplicationContext(), "Сохраненных данных пока нет, подключитесь к интернету", Toast.LENGTH_SHORT).show();
                         break;
                     }
                     events = parser.GetEventFromJsonString(response);
-                    intent2.putExtra("Events", (Serializable) events);
+                    intent2.putExtra(EVENTS, (Serializable) events);
                     startActivity(intent2);
                     break;
                 default:
                     if (url_address_one_event == null)
                         parser.WriteDataToFile(response, getApplicationContext());
                     events = parser.GetEventFromJsonString(response);
-                    intent2.putExtra("Events", (Serializable) events);
+                    intent2.putExtra(EVENTS, (Serializable) events);
                     startActivity(intent2);
                     break;
             }

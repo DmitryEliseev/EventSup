@@ -29,10 +29,10 @@ public class ReportAdapter extends BaseAdapter {
     String event_address;
     String TAG = "MY_TAG";
 
-    public ReportAdapter (Context _context, List<Report> _reports, String _event_address) {
+    public ReportAdapter(Context _context, List<Report> _reports, String _event_address) {
         context = _context;
         reports = _reports;
-        lInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        lInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         event_address = _event_address;
     }
 
@@ -59,7 +59,7 @@ public class ReportAdapter extends BaseAdapter {
             view.setLongClickable(true);
         }
 
-        Report report = (Report)getItem(position);
+        Report report = (Report) getItem(position);
 
         view.setId(position);
 
@@ -69,7 +69,7 @@ public class ReportAdapter extends BaseAdapter {
         TextView report_date = (TextView) view.findViewById(R.id.report_date);
         report_date.setText(report.time.substring(0, report.time.length() - 3));
 
-        String address="";
+        String address = "";
         if (report.report_address.equals("null"))
             address = event_address + ", aудитория № " + report.lecture_hall;
         else
@@ -77,7 +77,7 @@ public class ReportAdapter extends BaseAdapter {
         TextView report_address = (TextView) view.findViewById(R.id.report_address);
         report_address.setText(address);
 
-        String authors="";
+        String authors = "";
         for (int j = 0; j < report.authors.size() - 1; j++)
             authors += report.authors.get(j) + ", ";
         authors += report.authors.get(report.authors.size() - 1);
@@ -91,7 +91,7 @@ public class ReportAdapter extends BaseAdapter {
         else
             report_description.setText(descrip.substring(0, Math.min(descrip.length(), description_max_length)) + "...");
 
-        TextView status = (TextView)view.findViewById(R.id.report_status);
+        TextView status = (TextView) view.findViewById(R.id.report_status);
         status.setVisibility(View.GONE);
 
         SimpleDateFormat format = new SimpleDateFormat();

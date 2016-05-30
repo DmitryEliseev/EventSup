@@ -18,16 +18,16 @@ import java.util.List;
 /**
  * Created by User on 19.05.2016.
  */
-public class VisitedReportsAdapter extends BaseAdapter{
+public class VisitedReportsAdapter extends BaseAdapter {
 
     Context context;
     LayoutInflater lInflater;
     List<Report> reports;
 
-    public VisitedReportsAdapter (Context _context, List<Report> _reports){
+    public VisitedReportsAdapter(Context _context, List<Report> _reports) {
         context = _context;
         reports = _reports;
-        lInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        lInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
@@ -53,12 +53,12 @@ public class VisitedReportsAdapter extends BaseAdapter{
             view.setLongClickable(true);
         }
 
-        Report report = (Report)getItem(position);
+        Report report = (Report) getItem(position);
 
         view.setId(position);
         TextView report_title = (TextView) view.findViewById(R.id.visited_report_title);
         TextView report_date = (TextView) view.findViewById(R.id.visited_report_date);
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)report_date.getLayoutParams();
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) report_date.getLayoutParams();
         params.gravity = Gravity.CENTER_HORIZONTAL;
         params.setMargins(0, 10, 0, 20);
         report_date.setLayoutParams(params);
