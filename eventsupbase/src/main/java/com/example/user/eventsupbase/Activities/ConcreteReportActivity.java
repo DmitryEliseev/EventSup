@@ -8,6 +8,7 @@ import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,7 +63,9 @@ public class ConcreteReportActivity extends AppCompatActivity {
             address = event_address + ", аудитория № " + report.lecture_hall;
         else address = report.report_address + ", aудитория №" + report.lecture_hall;
         c_report_address.setText(address);
-        c_report_description.setText(report.description);
+        if(!report.description.equals("null"))
+            c_report_description.setText(report.description);
+        c_report_description.setVisibility(View.GONE);
 
         //Присваивание TextView ссылки
         String url_address = "<a href = http://diploma.welcomeru.ru/" + report.document + "> Обзор статьи";

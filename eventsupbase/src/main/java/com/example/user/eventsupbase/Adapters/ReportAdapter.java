@@ -86,10 +86,12 @@ public class ReportAdapter extends BaseAdapter {
 
         String descrip = report.description;
         TextView report_description = (TextView) view.findViewById(R.id.report_description);
-        if (descrip.length() < description_max_length)
-            report_description.setText(descrip);
-        else
-            report_description.setText(descrip.substring(0, Math.min(descrip.length(), description_max_length)) + "...");
+        if(!descrip.equals("null")) {
+            if (descrip.length() < description_max_length)
+                report_description.setText(descrip);
+            else
+                report_description.setText(descrip.substring(0, Math.min(descrip.length(), description_max_length)) + "...");
+        }else report_description.setVisibility(View.GONE);
 
         TextView status = (TextView) view.findViewById(R.id.report_status);
         status.setVisibility(View.GONE);

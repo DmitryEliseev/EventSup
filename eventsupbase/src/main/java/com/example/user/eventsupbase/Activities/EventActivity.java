@@ -51,9 +51,21 @@ public class EventActivity extends AppCompatActivity {
 
     public void onGridClick(View v) {
         int id = v.getId();
-        intent2.putExtra(REPORTS, (Serializable) events.get(id).reports);
-        intent2.putExtra(EVENT_ADDRESS, events.get(id).event_address);
-        startActivity(intent2);
+        //Проверка на полноту полученных данных
+        int numberOfRep = events.get(id).reports.size();
+        if(numberOfRep!=0) {
+            int count = 0;
+            for (int i = 0; i<numberOfRep; i++ )
+                if(events.get(id).reports.get(i).authors.size()!=0)
+                    count++;
+            if(count==numberOfRep) {
+                intent2.putExtra(REPORTS, (Serializable) events.get(id).reports);
+                intent2.putExtra(EVENT_ADDRESS, events.get(id).event_address);
+                startActivity(intent2);
+            }
+            else Toast.makeText(this, "Информация об этом событии обновляется, зайдите чуть-чуть попозже", Toast.LENGTH_SHORT).show();
+        }
+        else Toast.makeText(this, "Информация об этом событии обновляется, зайдите чуть-чуть попозже", Toast.LENGTH_SHORT).show();
     }
 
     @Override
