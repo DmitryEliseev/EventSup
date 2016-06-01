@@ -16,25 +16,25 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.user.eventsupbase.Adapters.VisitedReportsAdapter;
+import com.example.user.eventsupbase.Adapters.ReportVisitedAdapter;
 import com.example.user.eventsupbase.DB.DbToken;
 import com.example.user.eventsupbase.HttpClient;
-import com.example.user.eventsupbase.JsonParsing;
+import com.example.user.eventsupbase.JsonParser;
 import com.example.user.eventsupbase.Models.Report;
-import com.example.user.eventsupbase.Models.User;
+import com.example.user.eventsupbase.Models.Token;
 import com.example.user.eventsupbase.R;
 
 import java.util.List;
 
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 
-public class VisitedReportsActivity extends AppCompatActivity {
+public class ReportVisitedActivity extends AppCompatActivity {
 
     ProgressDialog pDialog;
     String url_get_all_visited_reports;
     List<Report> reports;
     CoordinatorLayout coordinatorLayout;
-    VisitedReportsAdapter adapter;
+    ReportVisitedAdapter adapter;
     ListView lvVisitedReports;
 
     @Override
@@ -48,7 +48,7 @@ public class VisitedReportsActivity extends AppCompatActivity {
 
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.visited_coordLayout);
 
-        url_get_all_visited_reports = String.format("http://diploma.welcomeru.ru/visited/%s", User.token);
+        url_get_all_visited_reports = String.format("http://diploma.welcomeru.ru/visited/%s", Token.token);
         new GetJsonInfo().execute(url_get_all_visited_reports);
     }
 
@@ -56,7 +56,7 @@ public class VisitedReportsActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(VisitedReportsActivity.this);
+            pDialog = new ProgressDialog(ReportVisitedActivity.this);
             pDialog.setMessage("Загрузка данных");
             pDialog.show();
         }
@@ -64,7 +64,7 @@ public class VisitedReportsActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
             HttpClient httpClient = new HttpClient(params[0]);
-            return httpClient.getData();
+            return httpClient.getOrSendData();
         }
 
         @Override
@@ -82,9 +82,9 @@ public class VisitedReportsActivity extends AppCompatActivity {
                     Snackbar.make(coordinatorLayout, "Подключитесь к интернету, чтобы работать с данной вкладкой!", Snackbar.LENGTH_SHORT).show();
                     break;
                 default:
-                    JsonParsing parsing = new JsonParsing();
+                    JsonParser parsing = new JsonParser();
                     reports = parsing.GetReportsFromJsonString(response);
-                    adapter = new VisitedReportsAdapter(getApplicationContext(), reports);
+                    adapter = new ReportVisitedAdapter(getApplicationContext(), reports);
                     lvVisitedReports = (ListView) findViewById(R.id.lvVisitedReports);
                     lvVisitedReports.setLongClickable(true);
                     lvVisitedReports.setAdapter(adapter);
@@ -109,7 +109,7 @@ public class VisitedReportsActivity extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         String report_id = reports.get(info.position).id_report;
-        String url_remove_visited_report = String.format("http://diploma.welcomeru.ru/remove/%s/%s", User.token, report_id);
+        String url_remove_visited_report = String.format("http://diploma.welcomeru.ru/remove/%s/%s", Token.token, report_id);
         new RemovingVisitedReport().execute(url_remove_visited_report);
         return true;
     }
@@ -119,7 +119,7 @@ public class VisitedReportsActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
             HttpClient httpClient = new HttpClient(params[0]);
-            return httpClient.SendDataOrReturnVisitedReports();
+            return httpClient.getOrSendData();
         }
 
         protected void onPostExecute(String response) {
@@ -151,7 +151,7 @@ public class VisitedReportsActivity extends AppCompatActivity {
                 finish();
                 return true;
             case R.id.action_user:
-                String message = String.format("Username: %s", User.login);
+                String message = String.format("Username: %s", Token.login);
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.action_exit:
@@ -164,7 +164,8 @@ public class VisitedReportsActivity extends AppCompatActivity {
                     dbToken.close();
                 }
 
-                Intent intent3 = new Intent(this, StartActivity.class);
+                Intent intent3 = new Intent(this, AuthActivity.class);
+                intent3.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent3);
                 return true;
             default:

@@ -15,14 +15,14 @@ import android.widget.Toast;
 import com.example.user.eventsupbase.DB.DbToken;
 import com.example.user.eventsupbase.HttpClient;
 import com.example.user.eventsupbase.Models.Report;
-import com.example.user.eventsupbase.Models.User;
+import com.example.user.eventsupbase.Models.Token;
 import com.example.user.eventsupbase.R;
 
 import java.util.List;
 
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 
-public class ConcreteReportActivity extends AppCompatActivity {
+public class ReportConcreteActivity extends AppCompatActivity {
 
     Intent intent;
     Report report;
@@ -81,14 +81,14 @@ public class ConcreteReportActivity extends AppCompatActivity {
                 return true;
             case R.id.action_visited:
                 if (HttpClient.hasConnection(this)) {
-                    Intent intent = new Intent(this, VisitedReportsActivity.class);
+                    Intent intent = new Intent(this, ReportVisitedActivity.class);
                     startActivity(intent);
                 } else {
                     Toast.makeText(this, "Для выполнения этого действия необходимо соединение с интернетом!", Toast.LENGTH_SHORT).show();
                 }
                 return true;
             case R.id.action_user:
-                String message = String.format("Username: %s", User.login);
+                String message = String.format("Username: %s", Token.login);
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.action_exit:
@@ -101,7 +101,8 @@ public class ConcreteReportActivity extends AppCompatActivity {
                     dbToken.close();
                 }
 
-                Intent intent3 = new Intent(this, StartActivity.class);
+                Intent intent3 = new Intent(this, AuthActivity.class);
+                intent3.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent3);
                 return true;
             default:

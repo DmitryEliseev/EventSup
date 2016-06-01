@@ -21,7 +21,7 @@ import com.example.user.eventsupbase.Adapters.ReportAdapter;
 import com.example.user.eventsupbase.DB.DbToken;
 import com.example.user.eventsupbase.HttpClient;
 import com.example.user.eventsupbase.Models.Report;
-import com.example.user.eventsupbase.Models.User;
+import com.example.user.eventsupbase.Models.Token;
 import com.example.user.eventsupbase.R;
 
 import java.io.Serializable;
@@ -60,7 +60,7 @@ public class ReportActivity extends AppCompatActivity {
         lvReport.setAdapter(adapter);
         registerForContextMenu(lvReport);
 
-        intent2 = new Intent(this, ConcreteReportActivity.class);
+        intent2 = new Intent(this, ReportConcreteActivity.class);
     }
 
     public void onGridClick(View v) {
@@ -79,14 +79,14 @@ public class ReportActivity extends AppCompatActivity {
                 return true;
             case R.id.action_visited:
                 if (HttpClient.hasConnection(this)) {
-                    Intent intent = new Intent(this, VisitedReportsActivity.class);
+                    Intent intent = new Intent(this, ReportVisitedActivity.class);
                     startActivity(intent);
                 } else {
                     Toast.makeText(this, "Для выполнения этого действия необходимо соединение с интернетом!", Toast.LENGTH_SHORT).show();
                 }
                 return true;
             case R.id.action_user:
-                String message = String.format("Username: %s", User.login);
+                String message = String.format("Username: %s", Token.login);
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.action_exit:
@@ -99,7 +99,8 @@ public class ReportActivity extends AppCompatActivity {
                     dbToken.close();
                 }
 
-                Intent intent3 = new Intent(this, StartActivity.class);
+                Intent intent3 = new Intent(this, AuthActivity.class);
+                intent3.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent3);
                 return true;
             default:
@@ -139,7 +140,7 @@ public class ReportActivity extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         String report_id = reports.get(info.position).id_report;
-        url_add_visited_report = String.format("http://diploma.welcomeru.ru/add/%s/%s", User.token, report_id);
+        url_add_visited_report = String.format("http://diploma.welcomeru.ru/add/%s/%s", Token.token, report_id);
         new AddingVisitedReport().execute(url_add_visited_report);
         return true;
     }
@@ -149,7 +150,7 @@ public class ReportActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
             HttpClient httpClient = new HttpClient(params[0]);
-            return httpClient.SendDataOrReturnVisitedReports();
+            return httpClient.getOrSendData();
         }
 
         protected void onPostExecute(String response) {

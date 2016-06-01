@@ -17,9 +17,9 @@ import android.widget.Toast;
 
 import com.example.user.eventsupbase.DB.DbToken;
 import com.example.user.eventsupbase.HttpClient;
-import com.example.user.eventsupbase.JsonParsing;
+import com.example.user.eventsupbase.JsonParser;
 import com.example.user.eventsupbase.Models.Event;
-import com.example.user.eventsupbase.Models.User;
+import com.example.user.eventsupbase.Models.Token;
 import com.example.user.eventsupbase.QrReaderIntegrator.IntentIntegrator;
 import com.example.user.eventsupbase.QrReaderIntegrator.IntentResult;
 import com.example.user.eventsupbase.R;
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     String url_address_one_event = null;
     CoordinatorLayout coordinatorLayout;
     Snackbar snackbar = null;
-    JsonParsing parser;
+    JsonParser parser;
 
     final String url_address_all_events = "http://diploma.welcomeru.ru/events";
     final String TAG = "MY_LOG";
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         String status = intent1.getStringExtra(SplashActivity.AUTH_STATUS);
 
         intent2 = new Intent(this, EventActivity.class);
-        parser = new JsonParsing();
+        parser = new JsonParser();
 
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.main_coordLayout);
         snackbar = Snackbar.make(coordinatorLayout, status, Snackbar.LENGTH_LONG);
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
             HttpClient httpClient = new HttpClient(params[0]);
-            return httpClient.getData();
+            return httpClient.getOrSendData();
         }
 
         protected void onPostExecute(String response) {
@@ -137,14 +137,14 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_visited:
                 if (HttpClient.hasConnection(this)) {
-                    Intent intent = new Intent(this, VisitedReportsActivity.class);
+                    Intent intent = new Intent(this, ReportVisitedActivity.class);
                     startActivity(intent);
                 } else {
                     Toast.makeText(this, "Для выполнения этого действия необходимо соединение с интернетом!", Toast.LENGTH_SHORT).show();
                 }
                 return true;
             case R.id.action_user:
-                String message = String.format("Username: %s", User.login);
+                String message = String.format("Username: %s", Token.login);
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.action_exit:
@@ -157,8 +157,8 @@ public class MainActivity extends AppCompatActivity {
                     dbToken.close();
                 }
 
-                Intent intent3 = new Intent(this, StartActivity.class);
-                intent3.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                Intent intent3 = new Intent(this, AuthActivity.class);
+                intent3.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent3);
                 return true;
             default:

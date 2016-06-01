@@ -18,13 +18,13 @@ import java.util.List;
 /**
  * Created by User on 19.05.2016.
  */
-public class VisitedReportsAdapter extends BaseAdapter {
+public class ReportVisitedAdapter extends BaseAdapter {
 
     Context context;
     LayoutInflater lInflater;
     List<Report> reports;
 
-    public VisitedReportsAdapter(Context _context, List<Report> _reports) {
+    public ReportVisitedAdapter(Context _context, List<Report> _reports) {
         context = _context;
         reports = _reports;
         lInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

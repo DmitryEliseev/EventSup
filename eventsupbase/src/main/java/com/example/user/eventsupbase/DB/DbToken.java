@@ -46,20 +46,17 @@ public class DbToken extends SQLiteOpenHelper {
         }
     }
 
-    public Token GetDateOfLastToken(SQLiteDatabase db) {
-        Token token = new Token();
+    public void GetDateOfLastToken(SQLiteDatabase db) {
         Cursor c = db.rawQuery("SELECT * FROM " + TABLE_NAME + " ORDER BY " + COLUMN_ID + " DESC LIMIT 1", null);
         if (c.moveToFirst()) {
             do {
-                token.token = c.getString(c.getColumnIndex(COLUMN_TOKEN));
-                token.dateOfCreation = c.getString(c.getColumnIndex(COLUMN_TIME));
-                token.userLogin = c.getString(c.getColumnIndex(COLUMN_USER_LOGIN));
+                Token.token = c.getString(c.getColumnIndex(COLUMN_TOKEN));
+                Token.dateOfCreation = c.getString(c.getColumnIndex(COLUMN_TIME));
+                Token.login = c.getString(c.getColumnIndex(COLUMN_USER_LOGIN));
             } while (c.moveToNext());
         } else {
             c.close();
-            return null;
         }
         c.close();
-        return token;
     }
 }

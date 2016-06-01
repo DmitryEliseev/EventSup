@@ -16,9 +16,9 @@ import android.widget.Toast;
 import com.example.user.eventsupbase.Activities.MainActivity;
 import com.example.user.eventsupbase.Activities.SplashActivity;
 import com.example.user.eventsupbase.DB.DbToken;
-import com.example.user.eventsupbase.HttpClient;
-import com.example.user.eventsupbase.Models.User;
 import com.example.user.eventsupbase.EncryptionClient;
+import com.example.user.eventsupbase.HttpClient;
+import com.example.user.eventsupbase.Models.Token;
 import com.example.user.eventsupbase.R;
 
 import java.text.SimpleDateFormat;
@@ -70,7 +70,7 @@ public class FragLogin extends Fragment {
         @Override
         protected String doInBackground(String... params) {
             HttpClient httpClient = new HttpClient(params[0]);
-            return httpClient.SendDataOrReturnVisitedReports();
+            return httpClient.getOrSendData();
         }
 
         protected void onPostExecute(String response) {
@@ -84,19 +84,19 @@ public class FragLogin extends Fragment {
                     break;
                 default:
                     try {
-                        String[] resp = response.split(";");
-                        String token = resp[1];
-                        User.token = token;
-                        User.login = etLogin.getText().toString();
+                        //Формирование токена
+                        Token.token = response.split(";")[1];
+                        Token.login = etLogin.getText().toString();
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Token.dateOfCreation = dateFormat.format(new Date());
 
                         //Сохранение токена в SQLite
                         dbToken = new DbToken(getActivity());
                         SQLiteDatabase db = dbToken.getWritableDatabase();
                         ContentValues values = new ContentValues();
-                        values.put(DbToken.COLUMN_TOKEN, token);
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                        values.put(DbToken.COLUMN_TIME, dateFormat.format(new Date()));
-                        values.put(DbToken.COLUMN_USER_LOGIN, User.login);
+                        values.put(DbToken.COLUMN_TOKEN, Token.token);
+                        values.put(DbToken.COLUMN_TIME, Token.dateOfCreation);
+                        values.put(DbToken.COLUMN_USER_LOGIN, Token.login);
                         db.insert(DbToken.TABLE_NAME, null, values);
 
                         intent.putExtra(SplashActivity.AUTH_STATUS, "Вход произведен успешно!");

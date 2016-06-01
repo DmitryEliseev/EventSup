@@ -22,7 +22,7 @@ import java.util.List;
  * Created by User on 26.04.2016.
  * This class is responsible for parsing input json string
  */
-public class JsonParsing {
+public class JsonParser {
 
     final String TAG = "MY_LOG";
     final String FILE_NAME = "data.json";

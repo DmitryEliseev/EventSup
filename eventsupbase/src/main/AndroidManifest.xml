@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Activities.StartActivity"
+            android:name=".Activities.AuthActivity"
             android:label="Авторизация"
             android:noHistory="true"
             android:launchMode="singleTask">
@@ -26,7 +26,7 @@
 
         </activity>
         <activity
-            android:name=".Activities.ConcreteReportActivity"
+            android:name=".Activities.ReportConcreteActivity"
             android:label="Доклад">
 
         </activity>
@@ -36,7 +36,7 @@
 
         </activity>
         <activity
-            android:name=".Activities.VisitedReportsActivity"
+            android:name=".Activities.ReportVisitedActivity"
             android:label="Посещенные доклады">
 
         </activity>

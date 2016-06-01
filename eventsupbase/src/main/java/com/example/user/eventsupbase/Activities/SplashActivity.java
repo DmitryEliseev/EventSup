@@ -1,23 +1,16 @@
 package com.example.user.eventsupbase.Activities;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.user.eventsupbase.DB.DbToken;
-import com.example.user.eventsupbase.HttpClient;
-import com.example.user.eventsupbase.JsonParsing;
 import com.example.user.eventsupbase.Models.Token;
-import com.example.user.eventsupbase.Models.User;
 import com.example.user.eventsupbase.R;
 
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -45,11 +38,11 @@ public class SplashActivity extends AppCompatActivity {
         try {
             dbToken = new DbToken(this);
             SQLiteDatabase db = dbToken.getWritableDatabase();
-            Token token = dbToken.GetDateOfLastToken(db);
-            if (token != null) {
+            dbToken.GetDateOfLastToken(db);
+            if (Token.token != null) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 try {
-                    dateOfLastToken = dateFormat.parse(token.dateOfCreation);
+                    dateOfLastToken = dateFormat.parse(Token.dateOfCreation);
                 } catch (Exception e) {
                     Log.e(TAG, e.getMessage());
                 }
@@ -59,15 +52,13 @@ public class SplashActivity extends AppCompatActivity {
                 if (difference > 148) {
                     new Handler().postDelayed(new Runnable() {
                         public void run() {
-                            startActivity(new Intent(SplashActivity.this, StartActivity.class));
+                            startActivity(new Intent(SplashActivity.this, AuthActivity.class));
                             finish();
                         }
                     }, millisecondsDelayed);
                 } else {
-                    User.token = token.token;
-                    User.login = token.userLogin;
                     intent = new Intent(this, MainActivity.class);
-                    String message = "Вход произведен успешно! Пользователь: " + User.login;
+                    String message = "Вход произведен успешно! Пользователь: " + Token.login;
                     intent.putExtra(AUTH_STATUS, message);
                     new Handler().postDelayed(new Runnable() {
                         public void run() {
@@ -81,7 +72,7 @@ public class SplashActivity extends AppCompatActivity {
             else {
                 new Handler().postDelayed(new Runnable() {
                     public void run() {
-                        startActivity(new Intent(SplashActivity.this, StartActivity.class));
+                        startActivity(new Intent(SplashActivity.this, AuthActivity.class));
                         finish();
                     }
                 }, millisecondsDelayed);
