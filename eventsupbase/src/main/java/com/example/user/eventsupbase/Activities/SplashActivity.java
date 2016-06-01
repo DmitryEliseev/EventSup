@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.example.user.eventsupbase.DB.DbToken;
 import com.example.user.eventsupbase.HttpClient;
 import com.example.user.eventsupbase.JsonParsing;
+import com.example.user.eventsupbase.Models.Token;
 import com.example.user.eventsupbase.Models.User;
 import com.example.user.eventsupbase.R;
 
@@ -44,13 +45,11 @@ public class SplashActivity extends AppCompatActivity {
         try {
             dbToken = new DbToken(this);
             SQLiteDatabase db = dbToken.getWritableDatabase();
-            String[] last_token_info = dbToken.GetDateOfLastToken(db);
-            if (last_token_info != null) {
-                String token = last_token_info[0];
-                String stringDateOfLastToken = last_token_info[1];
+            Token token = dbToken.GetDateOfLastToken(db);
+            if (token != null) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 try {
-                    dateOfLastToken = dateFormat.parse(stringDateOfLastToken);
+                    dateOfLastToken = dateFormat.parse(token.dateOfCreation);
                 } catch (Exception e) {
                     Log.e(TAG, e.getMessage());
                 }
@@ -65,8 +64,8 @@ public class SplashActivity extends AppCompatActivity {
                         }
                     }, millisecondsDelayed);
                 } else {
-                    User.token = token;
-                    User.login = last_token_info[2];
+                    User.token = token.token;
+                    User.login = token.userLogin;
                     intent = new Intent(this, MainActivity.class);
                     String message = "Вход произведен успешно! Пользователь: " + User.login;
                     intent.putExtra(AUTH_STATUS, message);
