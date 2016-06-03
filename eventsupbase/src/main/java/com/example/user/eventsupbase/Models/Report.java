@@ -13,3 +13,4 @@ public class Report implements Serializable {
     public String document;
     public List<String> authors;
 }
+

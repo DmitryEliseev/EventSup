@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.example.user.eventsupbase.Models.Token;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
@@ -25,7 +27,7 @@ public class HttpClient {
         try {
             URL url = new URL(url_address);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setConnectTimeout(1500);
+            urlConnection.setConnectTimeout(1000);
             urlConnection.setReadTimeout(1500);
             try {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));

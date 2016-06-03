@@ -15,11 +15,11 @@ public class DbToken extends SQLiteOpenHelper {
     public static final String TABLE_NAME = "tokens";
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_TOKEN = "token";
-    public static final String COLUMN_TIME = "timed_add";
-    public static final String COLUMN_USER_LOGIN = "user_login";
+    public static final String COLUMN_TIME = "time_added";
+    public static final String COLUMN_USER_LOGIN = "login";
 
     private static final String DATABASE_NAME = "tokens.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     //Строка для создания таблицы
     private static final String DATABASE_CREATE = "create table "
@@ -40,7 +40,7 @@ public class DbToken extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion == 2 && newVersion == 3) {
+        if (oldVersion == 3 && newVersion == 4) {
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
             onCreate(db);
         }
@@ -51,7 +51,7 @@ public class DbToken extends SQLiteOpenHelper {
         if (c.moveToFirst()) {
             do {
                 Token.token = c.getString(c.getColumnIndex(COLUMN_TOKEN));
-                Token.dateOfCreation = c.getString(c.getColumnIndex(COLUMN_TIME));
+                Token.timeAdded = c.getString(c.getColumnIndex(COLUMN_TIME));
                 Token.login = c.getString(c.getColumnIndex(COLUMN_USER_LOGIN));
             } while (c.moveToNext());
         } else {

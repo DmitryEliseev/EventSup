@@ -11,3 +11,5 @@ public class Event implements Serializable {
     public String event_address;
     public List<Report> reports;
 }
+
+

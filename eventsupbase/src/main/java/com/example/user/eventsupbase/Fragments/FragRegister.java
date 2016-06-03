@@ -106,14 +106,14 @@ public class FragRegister extends Fragment {
                         Token.token = response.split(";")[1];
                         Token.login = etLogin.getText().toString();
                         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                        Token.dateOfCreation = dateFormat.format(new Date());
+                        Token.timeAdded = dateFormat.format(new Date());
 
                         //Сохранение токена в SQLite
                         dbToken = new DbToken(getActivity());
                         SQLiteDatabase db = dbToken.getWritableDatabase();
                         ContentValues values = new ContentValues();
                         values.put(DbToken.COLUMN_TOKEN, Token.token);
-                        values.put(DbToken.COLUMN_TIME, Token.dateOfCreation);
+                        values.put(DbToken.COLUMN_TIME, Token.timeAdded);
                         values.put(DbToken.COLUMN_USER_LOGIN, Token.login);
                         db.insert(DbToken.TABLE_NAME, null, values);
 

@@ -42,7 +42,7 @@ public class SplashActivity extends AppCompatActivity {
             if (Token.token != null) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 try {
-                    dateOfLastToken = dateFormat.parse(Token.dateOfCreation);
+                    dateOfLastToken = dateFormat.parse(Token.timeAdded);
                 } catch (Exception e) {
                     Log.e(TAG, e.getMessage());
                 }
